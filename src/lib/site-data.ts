@@ -131,6 +131,7 @@ export const site = {
     { name: "Clutch", url: "https://clutch.co/profile/squad-international", short: "Cl" },
     { name: "Upwork", url: "https://www.upwork.com/agencies/2096008037645452073" },
     { name: "GoodFirms", url: "https://www.goodfirms.co/company/squad-international", short: "GF" },
+    { name: "G2", url: "https://www.g2.com/products/squad-international" },
   ],
 };
 
@@ -815,6 +816,22 @@ export const faqs: { q: string; a: string[] }[] = [
 ];
 
 export const posts = [
+  {
+    slug: "smart-scaling-strategic-business-process-outsourcing",
+    title: "Smart scaling: the power of strategic business process outsourcing",
+    excerpt:
+      "Outsourcing judged by the capacity it returns to a business, not by the invoice — the four service areas, the compliance standards, and the verification signals that actually make it work.",
+    date: "2026-09-28",
+    readingTime: "5 min read",
+    category: "Growth",
+    body: [
+      "Ask founders of a scaling business where growth actually stalls, and the honest answer rarely points at product or market. More often it is leadership capacity: the people who should be setting direction are instead buried in the administrative and operational work that keeps the business running day to day.",
+      "That is the case for treating outsourcing as something other than a line-item cost reduction. The more useful way to think about it is as a tool for reclaiming organisational capacity. As a business grows, the volume of customer conversations, administrative work and outbound activity grows with it, and that volume competes directly with the work that actually moves the company forward. Handing repeatable processes to a dedicated external team does not just cut a cost line, it frees internal capacity for the decisions only the business itself can make.",
+      "In practice, that capacity gets reclaimed across four areas we see repeatedly. Medical billing and revenue cycle management absorbs the claims processing, eligibility checks and AR follow-up that otherwise pulls clinical and admin staff away from patients. Outbound sales support puts dedicated SDRs on prospecting and appointment setting so an internal sales team can spend its time closing rather than sourcing. Customer support outsourcing covers voice, chat, email and ticketing as one consistent channel rather than several disconnected ones. And dedicated teams and virtual assistance pick up the recurring back-office load — data entry, CRM hygiene, order processing — that otherwise sits on whoever has the least time to do it.",
+      "None of that works without trust, and trust in an international outsourcing partner is built on specifics rather than claims. A hybrid onshore-offshore model that can genuinely deliver round-the-clock coverage. Active HIPAA and HITECH compliance where healthcare data is involved, not a one-time certificate. And independent verification — platforms like Clutch and Trustpilot exist precisely because a vendor's own website is not where a buyer should be forming their final opinion.",
+      "The takeaway is simple to state and harder to execute: outsourcing done well is judged on the capacity it returns to the business, not on the invoice. Workflows built around how a specific industry actually operates, compliance that is demonstrated rather than asserted, and integration that lets a team scale its execution without scaling its headcount — that is what turns an outsourcing relationship into a growth lever rather than a cost centre.",
+    ],
+  },
   {
     slug: "independent-reviews-and-outsourcing-transparency",
     title: "Independent reviews, greater transparency, trusted outsourcing support",

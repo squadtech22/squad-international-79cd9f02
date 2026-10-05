@@ -1,16 +1,21 @@
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
-import { BRAND_PATHS, BrandIcon, type IconLink } from "@/lib/brand-marks";
+import { PlatformLogo } from "@/components/platform-logo";
+import { type IconLink } from "@/lib/brand-marks";
 import { site } from "@/lib/site-data";
 
+const PROFILE_DETAILS: Record<string, { subtitle: string; category: string }> = {
+  Trustpilot: { subtitle: "Verified Customer Reviews", category: "Reviews" },
+  Clutch: { subtitle: "BPO & Outsourcing Ratings", category: "Ratings" },
+  Upwork: { subtitle: "Top Rated Agency Profile", category: "Top Rated" },
+  GoodFirms: { subtitle: "Company Directory & Reviews", category: "Directory" },
+  G2: { subtitle: "Client Feedback & Ratings", category: "Verified" },
+  Linktree: { subtitle: "All Official Company Links", category: "Link Hub" },
+};
+
 /**
- * The directory and review listings, as a section rather than a row of icons in
- * the footer. Someone checking a supplier's credentials is on the about or
- * contact page already, and the listings carry more weight named and spaced out
- * than they did as badges among the socials.
- *
- * Trustpilot and Upwork publish marks; Clutch and GoodFirms do not, so those two
- * keep the lettered badge rather than being handed an invented glyph.
+ * The directory and review listings section on about and contact pages.
+ * Displays each platform link with its authentic official website logo.
  */
 export function BusinessProfiles({ items = site.profiles }: { items?: IconLink[] }) {
   return (
@@ -22,36 +27,47 @@ export function BusinessProfiles({ items = site.profiles }: { items?: IconLink[]
           description="We are listed and reviewed on the platforms buyers use to vet an outsourcing partner. Every profile below is ours."
         />
 
-        <ul className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-3">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {items.map((p) => {
-            const path = BRAND_PATHS[p.name];
+            const details = PROFILE_DETAILS[p.name] ?? {
+              subtitle: "Verified Business Listing",
+              category: "Platform",
+            };
+
             return (
-              <li key={p.name}>
-                <a
-                  href={p.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="card-pop group flex items-center gap-3 rounded-lg border border-border bg-background p-5 hover:border-marigold"
-                >
-                  <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border text-charcoal transition-colors group-hover:border-marigold group-hover:text-marigold">
-                    {path ? (
-                      <BrandIcon path={path} className="size-5" />
-                    ) : (
-                      <span className="text-[13px] font-semibold uppercase leading-none">
-                        {p.short ?? p.name.slice(0, 2)}
-                      </span>
-                    )}
-                  </span>
-                  <span className="min-w-0 flex-1 text-sm font-semibold text-charcoal">
-                    {p.name}
-                  </span>
-                  {/* The link leaves the site, so it says so. */}
-                  <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-marigold" />
-                </a>
-              </li>
+              <a
+                key={p.name}
+                href={p.url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Visit our ${p.name} profile`}
+                className="group relative flex flex-col justify-between rounded-xl border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-marigold hover:shadow-lg hover:shadow-marigold/5"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="rounded-full border border-border/60 bg-muted/60 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground transition-colors group-hover:border-marigold/30 group-hover:bg-marigold/10 group-hover:text-marigold">
+                      {details.category}
+                    </span>
+                    <span className="grid size-7 place-items-center rounded-full border border-border/60 bg-muted/30 text-muted-foreground transition-all group-hover:border-marigold group-hover:bg-marigold group-hover:text-charcoal">
+                      <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                  </div>
+
+                  {/* Prominent Website Logo */}
+                  <div className="mt-5 flex items-center min-h-[40px]">
+                    <PlatformLogo name={p.name} className="h-7 sm:h-8 max-w-[150px] w-auto transition-transform duration-300 group-hover:scale-105 origin-left" />
+                  </div>
+                </div>
+
+                <div className="mt-6 border-t border-border/50 pt-3">
+                  <p className="text-xs text-muted-foreground/80 transition-colors group-hover:text-charcoal">
+                    {details.subtitle}
+                  </p>
+                </div>
+              </a>
             );
           })}
-        </ul>
+        </div>
       </div>
     </section>
   );

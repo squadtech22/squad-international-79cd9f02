@@ -1,9 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight, CalendarDays, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BookingDialog } from "@/components/booking-dialog";
-import { FounderMark } from "@/components/founder-mark";
-import { PageHero } from "@/components/page-hero";
+import founderPhoto from "@/assets/haider-ali.jpg";
 import { SectionHeading } from "@/components/section-heading";
 import { site } from "@/lib/site-data";
 
@@ -47,74 +46,81 @@ export const Route = createFileRoute("/founder")({
 function FounderPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Leadership"
-        title={site.founder.name}
-        description={site.founder.summary}
-      />
+      <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-charcoal pt-24 pb-8 lg:min-h-screen lg:pt-24 lg:pb-8 xl:pt-28 xl:pb-10">
+        {/* Background Editorial Image */}
+        <div className="absolute inset-0 z-0 flex justify-end">
+          <div className="relative h-full w-full lg:w-3/5">
+            <img
+              src={founderPhoto}
+              alt=""
+              className="h-full w-full object-cover grayscale opacity-30 mix-blend-luminosity lg:opacity-50"
+            />
+            {/* Gradients to blend the image seamlessly into the charcoal background */}
+            <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-charcoal lg:bg-gradient-to-r lg:from-charcoal lg:via-charcoal/60 lg:to-transparent" />
+            <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-charcoal/40 to-transparent hidden lg:block" />
+          </div>
+        </div>
 
-      <section className="container-page py-20 md:py-24">
-        {/*
-          The mark sits beside the story rather than above it, so the column of
-          text keeps a readable measure instead of running the page width.
-        */}
-        <div className="grid gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
-          <div>
-            <FounderMark className="size-40" />
-            <p className="mt-6 text-lg text-charcoal">{site.founder.name}</p>
-            <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-marigold">
+        <div className="container-page relative z-10 grid gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-8 xl:col-span-7">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-marigold" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-marigold sm:text-xs">
+                Leadership
+              </span>
+            </div>
+
+            <h1 className="font-display text-6xl leading-[0.85] tracking-tight text-offwhite sm:text-7xl lg:text-8xl xl:text-[6.25rem]">
+              {site.founder.name}
+            </h1>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-offwhite/60 sm:text-sm">
               {site.founder.role}
             </p>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {site.founder.profiles.map((p) => (
-                <li key={p.name}>
-                  <a
-                    href={p.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3.5 py-1.5 text-xs font-medium text-charcoal transition-colors hover:border-marigold hover:text-marigold"
-                  >
-                    {p.name}
-                    <ArrowUpRight className="size-3.5" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
 
-          <div>
-            <SectionHeading eyebrow="In his words" title="Why the company exists" />
-            <div className="mt-8 space-y-4 text-sm leading-relaxed text-muted-foreground md:text-base">
-              {site.founder.bio.map((para) => (
-                <p key={para}>{para}</p>
+            <blockquote className="my-5 border-l-2 border-marigold pl-5 text-xl font-light italic leading-snug text-offwhite sm:text-2xl lg:text-2xl xl:text-[1.85rem]">
+              "The right team gives a business capacity without forcing it to build every function internally."
+            </blockquote>
+
+            <div className="prose prose-invert max-w-none">
+              <div className="space-y-2.5 text-xs leading-relaxed text-offwhite/75 sm:text-[13.5px] lg:text-[14.5px]">
+                {site.founder.bio.map((para) => (
+                  <p key={para}>{para}</p>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-offwhite/10 pt-4">
+              {site.founder.profiles.map((p) => (
+                <a
+                  key={p.name}
+                  href={p.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-center gap-2 rounded-full border border-offwhite/20 bg-offwhite/5 px-4 py-1.5 text-xs font-medium text-offwhite transition-all hover:border-marigold hover:bg-marigold hover:text-charcoal hover:shadow-[var(--shadow-marigold)] sm:px-5 sm:py-2"
+                >
+                  {p.name}
+                  <ArrowUpRight className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </a>
               ))}
             </div>
-            <p className="mt-8 text-sm text-muted-foreground">
-              More on the company on the{" "}
-              <Link to="/about" className="font-medium text-charcoal hover:text-marigold">
-                about page
-              </Link>
-              .
-            </p>
           </div>
         </div>
       </section>
 
-      <section className="surface-dark py-20 md:py-24">
+      <section className="bg-card py-20 md:py-28">
         <div className="container-page">
           <SectionHeading
             eyebrow="Next step"
             title="Talk to the team he built"
             description="Tell us what needs covering and we will come back with a proposed team shape."
-            tone="light"
           />
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap gap-4">
             <BookingDialog>
-              <Button variant="marigold" size="lg">
+              <Button variant="marigold" size="xl">
                 <CalendarDays /> Book a Free Consultation
               </Button>
             </BookingDialog>
-            <Button variant="outlineLight" size="lg" asChild>
+            <Button variant="outlineDark" size="xl" asChild>
               <a href={site.whatsapp} target="_blank" rel="noreferrer">
                 <MessageCircle /> WhatsApp Us
               </a>

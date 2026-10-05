@@ -30,6 +30,7 @@ import { CtaBand } from "@/components/cta-band";
 import { GoogleReviews } from "@/components/google-reviews";
 import { ClientSpotlight } from "@/components/client-spotlight";
 import { FeatureSplit, FlowMedia, OrbitMedia } from "@/components/feature-split";
+import { ClientLogos } from "@/components/client-logos";
 
 import { SectionHeading } from "@/components/section-heading";
 import { StatValue } from "@/components/stat-value";
@@ -179,7 +180,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-card">
+      <section className="border-b border-border bg-card">
         <div className="container-page grid grid-cols-2 gap-8 py-10 lg:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label}>
@@ -193,6 +194,8 @@ function Home() {
           ))}
         </div>
       </section>
+
+      <ClientLogos />
 
       <section className="container-page py-20 md:py-28">
         <SectionHeading

@@ -1,5 +1,5 @@
 import { CalendarDays, MessageCircle, Users } from "lucide-react";
-import dataWallImage from "@/assets/spotlight-data-wall.jpg";
+import dataWallImage from "@/assets/spotlight-data-wall.png";
 import { Button } from "@/components/ui/button";
 import { BookingDialog } from "@/components/booking-dialog";
 import { site } from "@/lib/site-data";

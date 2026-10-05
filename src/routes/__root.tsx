@@ -97,8 +97,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Dedicated offshore teams for customer support, business assistance, lead generation and operational delivery.",
       },
+      { property: "og:image", content: `${site.url}/og-image.jpg` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: `${site.url}/og-image.jpg` },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

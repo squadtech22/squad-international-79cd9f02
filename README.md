@@ -11,6 +11,12 @@ customer support, virtual assistance, lead generation and operational delivery.
 - Nitro for the production server build (Cloudflare by default; the target is
   auto-detected, so a Vercel or Netlify build selects its own preset)
 
+## Languages
+
+- **TypeScript and TSX** for the application, components, routes, and server code
+- **JavaScript (ES modules)** for build configuration and Node.js scripts
+- **CSS** for global styles and Tailwind theme tokens
+
 ## Development
 
 Requires Node.js. npm is the package manager — `package-lock.json` is the source

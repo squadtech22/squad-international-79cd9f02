@@ -46,11 +46,15 @@ export const Route = createFileRoute("/services/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.title} | Squad International Services` },
-          { name: "description", content: loaderData.short },
-          { property: "og:title", content: `${loaderData.title} | Squad International` },
-          { property: "og:description", content: loaderData.short },
-        ]
+        { title: `${loaderData.title} | Squad International Services` },
+        { name: "description", content: loaderData.short },
+        { property: "og:title", content: `${loaderData.title} | Squad International` },
+        { property: "og:description", content: loaderData.short },
+        { property: "og:image", content: `${site.url}/og-image.jpg` },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: `${site.url}/og-image.jpg` },
+      ]
       : [],
   }),
   component: ServiceDetail,
@@ -194,11 +198,10 @@ function ServiceDetail() {
                     role="radio"
                     aria-checked={i === priceModel}
                     onClick={() => setPriceModel(i)}
-                    className={`rounded-full px-3 py-2 text-xs font-medium transition-colors ${
-                      i === priceModel
+                    className={`rounded-full px-3 py-2 text-xs font-medium transition-colors ${i === priceModel
                         ? "bg-marigold text-charcoal"
                         : "text-muted-foreground hover:text-charcoal"
-                    }`}
+                      }`}
                   >
                     {m.label}
                   </button>
