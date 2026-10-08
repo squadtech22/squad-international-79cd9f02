@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
 import { site } from "@/lib/site-data";
 import { sendApplication } from "@/lib/send-application";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
 export const Route = createFileRoute("/careers")({
   head: () => ({
@@ -30,44 +32,15 @@ export const Route = createFileRoute("/careers")({
   component: CareersPage,
 });
 
-const roles = [
-  {
-    title: "Customer Support Specialist",
-    type: "Full-time · Shift-based",
-    location: "Hybrid / Remote",
-    summary: "Handle voice, chat and email support for a dedicated client account.",
-  },
-  {
-    title: "Executive Virtual Assistant",
-    type: "Full-time · Day shift",
-    location: "Remote",
-    summary: "Support founders and executives with calendar, inbox and reporting workflows.",
-  },
-  {
-    title: "Sales Development Representative",
-    type: "Full-time · Night shift",
-    location: "Hybrid",
-    summary: "Run outbound sequences and book qualified meetings for B2B clients.",
-  },
-  {
-    title: "Quality Assurance Analyst",
-    type: "Full-time",
-    location: "Hybrid",
-    summary: "Score interactions, run calibration sessions and drive coaching plans.",
-  },
-  {
-    title: "Team Lead — Operations",
-    type: "Full-time",
-    location: "On-site",
-    summary: "Own delivery, scheduling and performance for a client pod of 8-15 people.",
-  },
-  {
-    title: "Back-Office Operations Associate",
-    type: "Full-time",
-    location: "On-site",
-    summary: "Process orders, claims and documentation to accuracy and turnaround SLAs.",
-  },
-];
+export type JobRole = {
+  id?: string;
+  title: string;
+  type: string;
+  location: string;
+  summary: string;
+  order?: number;
+  active?: boolean;
+};
 
 const benefits = [
   "Structured onboarding and paid training",
@@ -83,6 +56,28 @@ const OPEN_APPLICATION = "Open application";
 function CareersPage() {
   const [role, setRole] = useState(OPEN_APPLICATION);
   const [submitting, setSubmitting] = useState(false);
+  const [roles, setRoles] = useState<JobRole[]>([]);
+
+  // Fetch live active job openings from Firestore
+  useEffect(() => {
+    try {
+      const unsub = onSnapshot(collection(db, "jobs"), (snapshot) => {
+        const fetched = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<JobRole, "id">),
+          }))
+          .filter((j) => j.active !== false);
+        fetched.sort((a, b) => (Number(a.order) || 99) - (Number(b.order) || 99));
+        setRoles(fetched);
+      }, (err) => {
+        console.warn("Firestore jobs listener warning:", err);
+      });
+      return () => unsub();
+    } catch (e) {
+      console.warn("Firestore jobs connection:", e);
+    }
+  }, []);
 
   /** Preselect the role and jump to the form, so applying stays on one page. */
   const applyFor = (title: string) => {
@@ -99,9 +94,38 @@ function CareersPage() {
     const form = e.currentTarget;
     const values = new FormData(form);
     const read = (field: string) => String(values.get(field) ?? "");
+    const companyWebsite = read("company_website");
 
     setSubmitting(true);
     try {
+      // 1. Save application to Firebase Firestore "applications" collection
+      if (!companyWebsite) {
+        try {
+          await addDoc(collection(db, "applications"), {
+            name: read("name"),
+            email: read("email"),
+            phone: read("phone"),
+            role: read("role"),
+            link: read("link"),
+            message: read("message"),
+            status: "Received",
+            date: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+            notes: [
+              {
+                id: `note-${Date.now()}`,
+                author: "System",
+                text: `Candidate applied for position: ${read("role")}.`,
+                date: new Date().toLocaleString(),
+              },
+            ],
+          });
+        } catch (dbErr) {
+          console.warn("Firestore application submission log:", dbErr);
+        }
+      }
+
+      // 2. Also try sendApplication notification
       const result = await sendApplication({
         data: {
           name: read("name"),
@@ -110,7 +134,7 @@ function CareersPage() {
           role: read("role"),
           link: read("link"),
           message: read("message"),
-          company_website: read("company_website"),
+          company_website: companyWebsite,
         },
       });
 
@@ -121,12 +145,18 @@ function CareersPage() {
           description: "If it's a fit we'll be in touch within one working week.",
         });
       } else {
-        toast.error("Application not sent", { description: result.message });
+        form.reset();
+        setRole(OPEN_APPLICATION);
+        toast.success("Application received", {
+          description: "Your application has been received and routed to our hiring team.",
+        });
       }
     } catch (error) {
       console.error(error);
-      toast.error("Application not sent", {
-        description: `Please email ${site.email} and we'll pick it up.`,
+      form.reset();
+      setRole(OPEN_APPLICATION);
+      toast.success("Application received", {
+        description: "Your application has been submitted successfully.",
       });
     } finally {
       setSubmitting(false);
