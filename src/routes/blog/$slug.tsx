@@ -2,21 +2,24 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CtaBand } from "@/components/cta-band";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { posts } from "@/lib/site-data";
+import { getAllPosts } from "@/lib/blog-posts";
+import { RichContent } from "@/lib/rich-content";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    const posts = await getAllPosts();
     const post = posts.find((p) => p.slug === params.slug);
     if (!post) throw notFound();
-    return post;
+    const more = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
+    return { post, more };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.title} | Squad International Blog` },
-          { name: "description", content: loaderData.excerpt.slice(0, 155) },
-          { property: "og:title", content: loaderData.title },
-          { property: "og:description", content: loaderData.excerpt.slice(0, 155) },
+          { title: `${loaderData.post.title} | Squad International Blog` },
+          { name: "description", content: loaderData.post.excerpt.slice(0, 155) },
+          { property: "og:title", content: loaderData.post.title },
+          { property: "og:description", content: loaderData.post.excerpt.slice(0, 155) },
           { property: "og:type", content: "article" },
         ]
       : [],
@@ -25,8 +28,7 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function BlogPost() {
-  const post = Route.useLoaderData();
-  const more = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const { post, more } = Route.useLoaderData();
 
   return (
     <>
@@ -39,21 +41,33 @@ function BlogPost() {
               day: "numeric",
               month: "long",
               year: "numeric",
-            })}{" "}
-            · {post.readingTime}
+            })}
+            {post.readingTime ? ` · ${post.readingTime}` : ""}
+            {post.author ? ` · ${post.author}` : ""}
           </p>
         </div>
       </section>
 
       <article className="container-page max-w-3xl py-16 md:py-20">
+        {post.coverImage && (
+          <img
+            src={post.coverImage}
+            alt=""
+            className="mb-10 aspect-[16/9] w-full rounded-lg object-cover"
+          />
+        )}
         <p className="text-lg leading-relaxed text-charcoal">{post.excerpt}</p>
-        <div className="mt-8 space-y-6">
-          {post.body.map((para) => (
-            <p key={para} className="text-base leading-relaxed text-muted-foreground">
-              {para}
-            </p>
-          ))}
-        </div>
+        {post.content ? (
+          <RichContent nodes={post.content} className="rich-article mt-8" />
+        ) : (
+          <div className="mt-8 space-y-6">
+            {(post.body ?? []).map((para) => (
+              <p key={para} className="text-base leading-relaxed text-muted-foreground">
+                {para}
+              </p>
+            ))}
+          </div>
+        )}
       </article>
 
       <section className="border-t border-border bg-card py-16">
