@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Allow read & write for all collections used by Squad International website & Admin Portal
+
+    // Roles and Permissions
+    match /roles/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Team Members & Portal Users
+    match /users/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Office Locations
+    match /offices/{document=**} {
+      allow read, write: if true;
+    }
+
+    // DME Revenue Calculator & Records
+    match /dmeRevenue/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Blog Articles & Posts
+    match /posts/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Inbound Leads & CRM Enquiries
+    match /leads/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Calendar Meetings & Discovery Calls
+    match /meetings/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Website Subscriptions
+    match /subscriptions/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Careers: Job Openings
+    match /jobs/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Careers: Candidate Applications
+    match /applications/{document=**} {
+      allow read, write: if true;
+    }
+
+    // Dedicated BPO Client Pods & Campaigns
+    match /campaigns/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { ExternalLink, Mail, MapPin } from "lucide-react";
+import { ChevronDown, ExternalLink, Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,11 +69,14 @@ function applyLabel(source: string) {
   }
 }
 
-/** One open role. Long descriptions are clipped until the reader expands them. */
+/**
+ * One open role. Descriptions start as a short preview of a few lines, so the
+ * list of roles can be scanned, and open in full when the reader asks.
+ */
 function JobCard({ role, onApply }: { role: JobRole; onApply: (title: string) => void }) {
   const [expanded, setExpanded] = useState(false);
   const nodes = parseRichContent(role.content, role.summary);
-  const isLong = (role.summary ?? "").length > 320;
+  const isLong = (role.summary ?? "").length > 160;
   const descriptionId = `job-${role.id ?? role.title}`.replace(/\s+/g, "-");
 
   return (
@@ -96,19 +99,20 @@ function JobCard({ role, onApply }: { role: JobRole; onApply: (title: string) =>
       <div className="mt-4 flex-1">
         <div
           id={descriptionId}
-          className={`relative overflow-hidden ${isLong && !expanded ? "max-h-56 job-fade" : ""}`}
+          className={`relative overflow-hidden ${isLong && !expanded ? "max-h-24 job-fade" : ""}`}
         >
           <RichContent nodes={nodes} className="rich-job text-sm text-muted-foreground" />
         </div>
         {isLong && (
           <button
             type="button"
-            className="mt-2 text-xs font-semibold text-charcoal hover:text-marigold"
+            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-charcoal hover:text-marigold"
             aria-expanded={expanded}
             aria-controls={descriptionId}
             onClick={() => setExpanded((e) => !e)}
           >
-            {expanded ? "Show less" : "Read full description"}
+            {expanded ? "Show less" : "View full job details"}
+            <ChevronDown className={`size-3.5 transition-transform ${expanded ? "rotate-180" : ""}`} />
           </button>
         )}
       </div>
@@ -321,7 +325,7 @@ function CareersPage() {
 
       <section className="container-page py-20 md:py-24">
         <SectionHeading eyebrow="Open roles" title="Currently hiring" />
-        <div className="mt-12 grid gap-5 md:grid-cols-2">
+        <div className="mt-12 grid items-start gap-5 md:grid-cols-2">
           {roles.map((r) => (
             <JobCard key={r.id ?? r.title} role={r} onApply={applyFor} />
           ))}

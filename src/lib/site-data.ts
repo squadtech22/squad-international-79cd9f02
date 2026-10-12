@@ -48,7 +48,7 @@ export const site = {
       city: "Karachi, Sindh",
       country: "Pakistan",
       lines: ["75 Hamid Hussain Farooqi Rd,", "Block 2 PECHS, Karachi, 75100, Sindh"],
-      mapUrl: "https://maps.app.goo.gl/tLVYhKqKK2J9CGiG8",
+      mapUrl: "https://maps.app.goo.gl/83LVaZetYLCj2ca96",
       address: {
         streetAddress: "75 Hamid Hussain Farooqi Rd, Block 2 PECHS",
         addressLocality: "Karachi",
@@ -61,7 +61,7 @@ export const site = {
       city: "Wah Cantonment, Punjab",
       country: "Pakistan",
       lines: ["Prestige Plaza, 1st Floor,", "Kohistan Enclave, Wah Cantt, Punjab, Pakistan"],
-      mapUrl: "https://maps.app.goo.gl/83LVaZetYLCj2ca96",
+      mapUrl: "https://maps.app.goo.gl/tLVYhKqKK2J9CGiG8",
       address: {
         streetAddress: "Prestige Plaza, 1st Floor, Kohistan Enclave",
         addressLocality: "Wah Cantonment",

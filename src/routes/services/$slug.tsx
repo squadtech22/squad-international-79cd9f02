@@ -33,6 +33,21 @@ const RETIRED_SLUGS = new Map<string, string>([
   ["accounting-bookkeeping", "/services"],
 ]);
 
+/**
+ * Each service shares with its own banner (public/og/services, cut to 1200x630
+ * from the artwork in public/upwork), so a link to one service no longer
+ * previews the same as every other page.
+ */
+const SERVICE_OG_IMAGES = new Set([
+  "customer-support",
+  "lead-generation",
+  "medical-billing-healthcare",
+  "virtual-business-assistance",
+]);
+
+const serviceOgImage = (slug: string) =>
+  SERVICE_OG_IMAGES.has(slug) ? `${site.url}/og/services/${slug}.jpg` : `${site.url}/og-image.jpg`;
+
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
     const service = services.find((s) => s.slug === params.slug);
@@ -50,10 +65,12 @@ export const Route = createFileRoute("/services/$slug")({
         { name: "description", content: loaderData.short },
         { property: "og:title", content: `${loaderData.title} | Squad International` },
         { property: "og:description", content: loaderData.short },
-        { property: "og:image", content: `${site.url}/og-image.jpg` },
+        { property: "og:image", content: serviceOgImage(loaderData.slug) },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: `${site.url}/og-image.jpg` },
+        { name: "twitter:image", content: serviceOgImage(loaderData.slug) },
       ]
       : [],
   }),
