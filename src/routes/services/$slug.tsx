@@ -22,15 +22,15 @@ import { services, site } from "@/lib/site-data";
  * closest current service where there is one and to the services index where the
  * capability has no successor.
  *
- * Sales and customer support now belong to Dedicated Teams & Virtual Assistance.
+ * Sales and customer support belong to Business Process Outsourcing (BPO).
  */
 const RETIRED_SLUGS = new Map<string, string>([
   ["dedicated-team-support", "/services"],
   ["operational-management", "/services"],
   ["growth-support", "/services"],
-  ["ecommerce-customer-support", "/services/virtual-business-assistance"],
-  ["customer-support", "/services/virtual-business-assistance"],
-  ["lead-generation", "/services/virtual-business-assistance"],
+  ["ecommerce-customer-support", "/services/business-process-outsourcing"],
+  ["customer-support", "/services/business-process-outsourcing"],
+  ["lead-generation", "/services/business-process-outsourcing"],
   ["accounting-bookkeeping", "/services"],
 ]);
 

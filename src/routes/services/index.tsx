@@ -14,7 +14,7 @@ export const Route = createFileRoute("/services/")({
       {
         name: "description",
         content:
-          "Explore medical billing, dedicated teams, BPO, AI workflow automation, website development, and custom software and mobile app development.",
+          "Explore BPO, Medical Billing & RCM, Dedicated Team & Virtual Assistance, custom software and mobile apps, website development, and AI development and workflow automation.",
       },
       { property: "og:title", content: "Outsourcing Services | Squad International" },
       {
@@ -32,7 +32,7 @@ function ServicesPage() {
       <PageHero
         eyebrow="Services"
         title="Flexible support. Built around your business."
-        description="Explore Medical Billing & RCM, Dedicated Teams & Virtual Assistance, Business Process Outsourcing (BPO), AI Workflow Automation, Website Design & Development, and Custom Software and Mobile App Development. Build the operational capacity and technology your business needs."
+        description="Explore Business Process Outsourcing (BPO), Medical Billing & RCM, Dedicated Team & Virtual Assistance, Custom Software and Mobile App Development, Website Design & Development, and AI Development & Workflow Automation. Build the operational capacity and technology your business needs."
       >
         <BookingDialog>
           <Button variant="marigold" size="lg">

@@ -89,7 +89,7 @@ const clients: Client[] = [
     src: "/clients/Squad International.png",
     alt: "Squad International",
     engagement: {
-      label: "Dedicated Teams & Virtual Assistance",
+      label: "Dedicated Team & Virtual Assistance",
       services: ["Data Entry & Admin Support", "Research", "CRM & Order Processing"],
     },
     url: "https://squadtechsol.com",

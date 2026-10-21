@@ -190,6 +190,122 @@ export type Service = {
 
 export const services: Service[] = [
   {
+    slug: "business-process-outsourcing",
+    title: "Business Process Outsourcing (BPO)",
+    short: "Customer support outsourcing, outbound sales support and sales development representatives, managed around your business processes.",
+    summary: "Outsource customer support, outbound sales and sales development to trained teams working in your tools, with documented workflows, quality checks and clear performance reporting.",
+    outcomes: [
+      "More capacity for recurring operational work",
+      "Consistent processes and clear ownership",
+      "Visibility through agreed reporting and reviews"
+    ],
+    capabilities: [
+      "Customer Support Outsourcing",
+      "Outbound Sales Support",
+      "Sales Development Representatives"
+    ],
+    process: [
+      {
+        step: "Map the process",
+        detail: "Review your workflows, volumes, systems and service expectations."
+      },
+      {
+        step: "Build & train",
+        detail: "Assign dedicated resources and document procedures and escalation paths."
+      },
+      {
+        step: "Pilot & calibrate",
+        detail: "Start with a supervised pilot and review quality before increasing volume."
+      },
+      {
+        step: "Manage & improve",
+        detail: "Monitor agreed service levels, coach the team and review opportunities to improve."
+      }
+    ],
+    idealFor: [
+      "Businesses scaling operations",
+      "Teams with recurring administrative workloads",
+      "Companies seeking managed process support"
+    ],
+    tools: [
+      "Your CRM and customer support platforms",
+      "Google Workspace and Microsoft 365",
+      "Your order management and reporting systems",
+      "Documented SOPs and quality scorecards",
+      "Apollo, ZoomInfo and Cognism",
+      "Instantly, Smartlead and Lemlist",
+      "LinkedIn Sales Navigator",
+      "HubSpot, Salesforce and Close",
+      "Clay and Dropcontact enrichment",
+      "Aircall and power dialers",
+      "Zendesk, Freshdesk and Intercom",
+      "Gorgias and Shopify",
+      "Salesforce Service Cloud",
+      "Talkdesk, Aircall and RingCentral",
+      "Front and Help Scout",
+      "Your knowledge base and macro library"
+    ],
+    pitch: "Build reliable customer support and sales operations with outsourced customer support teams, outbound sales support and dedicated sales development representatives.",
+    highlights: [
+      "Customer Support Outsourcing",
+      "Outbound Sales Support",
+      "Sales Development Representatives"
+    ],
+    offerings: [
+      "Customer Support Outsourcing",
+      "Outbound Sales Support",
+      "Sales Development Representatives"
+    ],
+    facts: [
+      {
+        label: "Delivery model",
+        value: "Managed Business Processes"
+      },
+      {
+        label: "Engagement type",
+        value: "Dedicated Team & Process Oversight"
+      }
+    ],
+    supportAreas: [
+      {
+        title: "Customer Support Outsourcing",
+        summary: "Trained support agents handling voice, email, chat and ticketing on your brand and your tooling — with the QA, coverage planning and escalation paths of an in-house function.",
+        capabilities: [
+          "Inbound voice and callback handling",
+          "Email, chat and social response",
+          "Ticket triage and escalation management",
+          "Order, billing and account support",
+          "Technical tier-1 support",
+          "Knowledge base and macro development"
+        ]
+      },
+      {
+        title: "Outbound Sales Support",
+        summary: "Research, list building, multichannel outreach and appointment setting run by SDR pods that report on pipeline, not activity vanity metrics.",
+        capabilities: [
+          "ICP definition and list building",
+          "Data enrichment and verification",
+          "Cold email and LinkedIn sequencing",
+          "Outbound calling and appointment setting",
+          "Inbound lead qualification and routing",
+          "Pipeline reporting and attribution"
+        ]
+      },
+      {
+        title: "Sales Development Representatives",
+        summary: "Dedicated SDRs support prospect research, lead qualification, outreach and appointment setting while keeping your CRM and pipeline reporting up to date.",
+        capabilities: [
+          "Prospect research and list building",
+          "Inbound and outbound lead qualification",
+          "Multichannel prospect outreach",
+          "Appointment setting and sales handover",
+          "CRM updates and pipeline reporting",
+          "Follow-up with prospective customers"
+        ]
+      }
+    ]
+  },
+  {
     slug: "medical-billing-healthcare",
     title: "Medical Billing & RCM",
     short:
@@ -258,253 +374,146 @@ export const services: Service[] = [
   },
   {
     slug: "virtual-business-assistance",
-    title: "Dedicated Teams & Virtual Assistance",
-    short:
-      "Dedicated teams for outbound sales, customer support and virtual assistance, built around your tools and workflow.",
-    summary:
-      "Dedicated sales, customer support and virtual assistance teams handling prospecting, outreach, appointment setting, voice, email, chat and ticketing alongside administrative work — calendar and inbox management, CRM hygiene, reporting, research, documentation and day-to-day coordination.",
+    title: "Dedicated Team & Virtual Assistance",
+    short: "Remote developers, development teams, e-commerce store managers, and Amazon and Shopify assistants dedicated to your business.",
+    summary: "Add remote talent to your team: web developers, a dedicated development team, e-commerce store managers, Amazon virtual assistants and Shopify assistants working within your tools and processes.",
     outcomes: [
-      "Reclaim 15-25 hours per week for senior staff",
-      "Lower cost per administrative hour by up to 60%",
-      "Consistent documentation and CRM data quality",
+      "Add remote talent for development and store operations",
+      "Maintain consistent e-commerce workflows",
+      "Scale your team around changing workloads"
     ],
     capabilities: [
-      "Executive and calendar management",
-      "Inbox triage and response handling",
-      "CRM and pipeline data maintenance",
-      "Invoicing, reconciliation and order admin",
-      "Research, reporting and presentation prep",
-      "Vendor and supplier coordination",
-    ],
-    supportAreas: [
-      {
-        title: "Outbound Sales Support",
-        summary: "Research, list building, multichannel outreach and appointment setting run by SDR pods that report on pipeline, not activity vanity metrics.",
-        capabilities: [
-          "ICP definition and list building",
-          "Data enrichment and verification",
-          "Cold email and LinkedIn sequencing",
-          "Outbound calling and appointment setting",
-          "Inbound lead qualification and routing",
-          "Pipeline reporting and attribution",
-        ],
-      },
-      {
-        title: "Customer Support Outsourcing",
-        summary: "Trained support agents handling voice, email, chat and ticketing on your brand and your tooling — with the QA, coverage planning and escalation paths of an in-house function.",
-        capabilities: [
-          "Inbound voice and callback handling",
-          "Email, chat and social response",
-          "Ticket triage and escalation management",
-          "Order, billing and account support",
-          "Technical tier-1 support",
-          "Knowledge base and macro development",
-        ],
-      },
+      "Remote Web Developers",
+      "Remote Development Team",
+      "Remote E-commerce store managers",
+      "Remote Amazon Virtual Assistant",
+      "Remote Shopify Assistant"
     ],
     process: [
-      { step: "Scope & role design", detail: "We map the tasks, tools and volumes before proposing a team shape." },
-      { step: "Recruit & vet", detail: "Shortlisted candidates are screened for domain, language and tooling fit." },
-      { step: "Onboard & document", detail: "Your workflows are turned into SOPs owned by our team lead." },
-      { step: "Run & improve", detail: "Weekly reporting, QA sampling and quarterly scope reviews." },
-    ],
-    idealFor: ["Founder-led businesses", "Professional services firms", "Agencies and consultancies", "B2B sales teams", "E-commerce and D2C", "SaaS platforms"],
-    tools: [
-      "Google Workspace and Microsoft 365",
-      "HubSpot, Salesforce and Pipedrive",
-      "Slack, Teams and Notion",
-      "Xero, QuickBooks and Bill.com",
-      "Asana, ClickUp and Monday.com",
-      "DocuSign and PandaDoc",
-      "Apollo, ZoomInfo and Cognism",
-      "Instantly, Smartlead and Lemlist",
-      "LinkedIn Sales Navigator",
-      "HubSpot, Salesforce and Close",
-      "Clay and Dropcontact enrichment",
-      "Aircall and power dialers",
-      "Zendesk, Freshdesk and Intercom",
-      "Gorgias and Shopify",
-      "Salesforce Service Cloud",
-      "Talkdesk, Aircall and RingCentral",
-      "Front and Help Scout",
-      "Your knowledge base and macro library",
-    ],
-    pitch:
-      "Build dedicated teams for outbound sales, customer support and virtual assistance. From prospecting and appointment setting to customer care and back-office work, we add capacity around your existing processes.",
-    highlights: ["Outbound Sales Support", "Customer Support", "Virtual Assistance"],
-    offerings: [
-      "Outbound Sales Support",
-      "Customer Support Outsourcing",
-      "Cold Calling & Lead Qualification",
-      "Appointment Setting & SDR Support",
-      "Inbound Calls, Live Chat & Email",
-      "Ticket Management",
-      "Data Entry & Admin Support",
-      "Research",
-      "CRM & Order Processing",
-      "Virtual Assistants",
-      "CRM / Data / Order Processing",
-      "Back Office",
-      "Administrative Support",
-      "Custom Dedicated Teams",
-    ],
-    facts: [
-      { label: "Resource model", value: "Dedicated Talent" },
-      { label: "Engagement type", value: "VA, Specialist or Full Team" },
-    ],
-  },
-  {
-    process: [
       {
-        step: "Scope the project",
-        detail: "Confirm your goals, requirements and package scope."
+        step: "Scope & role design",
+        detail: "We map the tasks, tools and volumes before proposing a team shape."
       },
       {
-        step: "Build & review",
-        detail: "Develop the solution with regular reviews and feedback."
+        step: "Recruit & vet",
+        detail: "Shortlisted candidates are screened for domain, language and tooling fit."
       },
       {
-        step: "Test & launch",
-        detail: "Complete testing, documentation and team training before handover."
+        step: "Onboard & document",
+        detail: "Your workflows are turned into SOPs owned by our team lead."
       },
       {
-        step: "Post-launch support",
-        detail: "Support your team during the included support period."
+        step: "Run & improve",
+        detail: "Weekly reporting, QA sampling and quarterly scope reviews."
       }
-    ],
-    facts: [
-      {
-        label: "Project packages",
-        value: "Small, Medium & Large"
-      },
-      {
-        label: "Pricing model",
-        value: "One-time project fee"
-      }
-    ],
-    slug: "ai-workflow-automation",
-    externalUrl: "https://www.squadtechsol.com/services",
-    title: "AI Workflow Automation",
-    short: "Automate repetitive business tasks, connect your tools and streamline operations with AI-assisted workflows.",
-    summary: "Automate repetitive business tasks, connect your tools, and streamline operations with AI-assisted workflows. Includes testing, documentation, team training, and post-launch support.",
-    outcomes: [
-      "Reduce repetitive manual work",
-      "Connect business tools and processes",
-      "Equip your team with documented workflows"
-    ],
-    capabilities: [
-      "Business workflow mapping",
-      "Connected application integrations",
-      "AI-assisted workflow steps",
-      "Workflow testing and documentation",
-      "Team training sessions",
-      "Post-launch support"
     ],
     idealFor: [
-      "Businesses with repetitive tasks",
-      "Operations and administrative teams",
-      "Teams using multiple business applications"
+      "Businesses building websites and software",
+      "E-commerce brands and store owners",
+      "Amazon sellers",
+      "Shopify merchants"
     ],
     tools: [
-      "Your existing business applications",
-      "Workflow automation platforms",
-      "AI tools selected for your workflow"
+      "Your development stack and version control tools",
+      "Amazon Seller Central",
+      "Shopify admin",
+      "Your e-commerce and order management platforms",
+      "Google Workspace and Microsoft 365",
+      "Slack, Teams and project management tools"
     ],
-    pitch: "Connect your tools and automate recurring tasks with AI-assisted workflows, testing, documentation, training and post-launch support.",
+    pitch: "Build your remote team with web developers, development resources, e-commerce store managers and Amazon or Shopify assistants who work around your existing workflow.",
     highlights: [
-      "AI-Assisted Workflows",
-      "App Integrations",
-      "Team Training"
+      "Remote Developers",
+      "E-commerce Store Managers",
+      "Amazon & Shopify Assistants"
     ],
     offerings: [
-      "Workflow Automation",
-      "Connected Applications",
-      "AI-Assisted Steps",
-      "Testing & Documentation",
-      "Team Training"
+      "Remote Web Developers",
+      "Remote Development Team",
+      "Remote E-commerce store managers",
+      "Remote Amazon Virtual Assistant",
+      "Remote Shopify Assistant"
     ],
-    packages: {
-      tiers: [
-        {
-          name: "Small",
-          price: "$1,500"
-        },
-        {
-          name: "Medium",
-          price: "$3,000"
-        },
-        {
-          name: "Large",
-          price: "$5,000"
-        }
-      ],
-      features: [
-        {
-          label: "Workflows",
-          values: [
-            "1",
-            "3",
-            "5"
-          ]
-        },
-        {
-          label: "Steps per workflow",
-          values: [
-            "Up to 5",
-            "Up to 5",
-            "Up to 8"
-          ]
-        },
-        {
-          label: "Connected applications",
-          values: [
-            "Up to 2",
-            "Up to 3",
-            "Up to 5"
-          ]
-        },
-        {
-          label: "AI-assisted steps",
-          values: [
-            "1 per workflow",
-            "1 per workflow",
-            "2 per workflow"
-          ]
-        },
-        {
-          label: "Testing & documentation",
-          values: [
-            "Included",
-            "Included",
-            "Included"
-          ]
-        },
-        {
-          label: "Team training sessions",
-          values: [
-            "1",
-            "2",
-            "3"
-          ]
-        },
-        {
-          label: "Post-launch support",
-          values: [
-            "14 days",
-            "30 days",
-            "45 days"
-          ]
-        },
-        {
-          label: "Estimated delivery",
-          values: [
-            "2?3 weeks",
-            "4?5 weeks",
-            "6?8 weeks"
-          ]
-        }
-      ]
-    }
+    facts: [
+      {
+        label: "Resource model",
+        value: "Dedicated Talent"
+      },
+      {
+        label: "Engagement type",
+        value: "VA, Specialist or Full Team"
+      }
+    ]
+  },
+  {
+    slug: "custom-software-mobile-app-development",
+    externalUrl: "https://www.squadtechsol.com/services",
+    title: "Custom Software and Mobile App Development",
+    short: "Build software and mobile applications around your business processes and customer needs.",
+    summary: "Custom software and mobile app development through Squad Tech Solutions, from requirements and user experience design to development, testing and launch.",
+    outcomes: [
+      "Software shaped around your workflows",
+      "Connected customer and internal experiences",
+      "A clear path from requirements to launch"
+    ],
+    capabilities: [
+      "Custom business software",
+      "Mobile app development",
+      "User experience and interface design",
+      "API and system integrations",
+      "Quality assurance and testing",
+      "Launch and ongoing maintenance"
+    ],
+    process: [
+      {
+        step: "Discover",
+        detail: "Define the users, requirements and project scope."
+      },
+      {
+        step: "Design",
+        detail: "Map workflows and review interface prototypes."
+      },
+      {
+        step: "Build & test",
+        detail: "Develop the solution and verify core workflows."
+      },
+      {
+        step: "Launch & support",
+        detail: "Release the product and plan ongoing maintenance."
+      }
+    ],
+    idealFor: [
+      "Businesses with custom workflows",
+      "Teams building digital products",
+      "Businesses launching mobile experiences"
+    ],
+    tools: [
+      "Technology selected for your requirements",
+      "Your existing systems and APIs"
+    ],
+    pitch: "Create business software and mobile apps tailored to your workflows, with design, development, integrations and testing delivered through Squad Tech Solutions.",
+    highlights: [
+      "Custom Software",
+      "Mobile Apps",
+      "System Integrations"
+    ],
+    offerings: [
+      "Custom Software",
+      "Mobile App Development",
+      "UI / UX Design",
+      "API Integrations",
+      "Testing & Maintenance"
+    ],
+    facts: [
+      {
+        label: "Delivery partner",
+        value: "Squad Tech Solutions"
+      },
+      {
+        label: "Engagement model",
+        value: "Scoped Development Project"
+      }
+    ]
   },
   {
     process: [
@@ -669,146 +678,157 @@ export const services: Service[] = [
     }
   },
   {
-    slug: "custom-software-mobile-app-development",
+    process: [
+      {
+        step: "Scope the project",
+        detail: "Confirm your goals, requirements and package scope."
+      },
+      {
+        step: "Build & review",
+        detail: "Develop the solution with regular reviews and feedback."
+      },
+      {
+        step: "Test & launch",
+        detail: "Complete testing, documentation and team training before handover."
+      },
+      {
+        step: "Post-launch support",
+        detail: "Support your team during the included support period."
+      }
+    ],
+    facts: [
+      {
+        label: "Project packages",
+        value: "Small, Medium & Large"
+      },
+      {
+        label: "Pricing model",
+        value: "One-time project fee"
+      }
+    ],
+    slug: "ai-workflow-automation",
     externalUrl: "https://www.squadtechsol.com/services",
-    title: "Custom Software and Mobile App Development",
-    short: "Build software and mobile applications around your business processes and customer needs.",
-    summary: "Custom software and mobile app development through Squad Tech Solutions, from requirements and user experience design to development, testing and launch.",
+    title: "AI Development & Workflow Automation",
+    short: "Automate repetitive business tasks, connect your tools and streamline operations with AI-assisted workflows.",
+    summary: "Automate repetitive business tasks, connect your tools, and streamline operations with AI-assisted workflows. Includes testing, documentation, team training, and post-launch support.",
     outcomes: [
-      "Software shaped around your workflows",
-      "Connected customer and internal experiences",
-      "A clear path from requirements to launch"
+      "Reduce repetitive manual work",
+      "Connect business tools and processes",
+      "Equip your team with documented workflows"
     ],
     capabilities: [
-      "Custom business software",
-      "Mobile app development",
-      "User experience and interface design",
-      "API and system integrations",
-      "Quality assurance and testing",
-      "Launch and ongoing maintenance"
-    ],
-    process: [
-      {
-        step: "Discover",
-        detail: "Define the users, requirements and project scope."
-      },
-      {
-        step: "Design",
-        detail: "Map workflows and review interface prototypes."
-      },
-      {
-        step: "Build & test",
-        detail: "Develop the solution and verify core workflows."
-      },
-      {
-        step: "Launch & support",
-        detail: "Release the product and plan ongoing maintenance."
-      }
+      "Business workflow mapping",
+      "Connected application integrations",
+      "AI-assisted workflow steps",
+      "Workflow testing and documentation",
+      "Team training sessions",
+      "Post-launch support"
     ],
     idealFor: [
-      "Businesses with custom workflows",
-      "Teams building digital products",
-      "Businesses launching mobile experiences"
+      "Businesses with repetitive tasks",
+      "Operations and administrative teams",
+      "Teams using multiple business applications"
     ],
     tools: [
-      "Technology selected for your requirements",
-      "Your existing systems and APIs"
+      "Your existing business applications",
+      "Workflow automation platforms",
+      "AI tools selected for your workflow"
     ],
-    pitch: "Create business software and mobile apps tailored to your workflows, with design, development, integrations and testing delivered through Squad Tech Solutions.",
+    pitch: "Connect your tools and automate recurring tasks with AI-assisted workflows, testing, documentation, training and post-launch support.",
     highlights: [
-      "Custom Software",
-      "Mobile Apps",
-      "System Integrations"
+      "AI-Assisted Workflows",
+      "App Integrations",
+      "Team Training"
     ],
     offerings: [
-      "Custom Software",
-      "Mobile App Development",
-      "UI / UX Design",
-      "API Integrations",
-      "Testing & Maintenance"
+      "Workflow Automation",
+      "Connected Applications",
+      "AI-Assisted Steps",
+      "Testing & Documentation",
+      "Team Training"
     ],
-    facts: [
-      {
-        label: "Delivery partner",
-        value: "Squad Tech Solutions"
-      },
-      {
-        label: "Engagement model",
-        value: "Scoped Development Project"
-      }
-    ]
-  },
-  {
-    slug: "business-process-outsourcing",
-    title: "Business Process Outsourcing (BPO)",
-    short: "Outsource recurring business processes with dedicated people, documented workflows and clear reporting.",
-    summary: "Managed support for recurring customer-facing, administrative and operational processes. We scope the work, build and train the team, document your workflows and track delivery through agreed service levels.",
-    outcomes: [
-      "More capacity for recurring operational work",
-      "Consistent processes and clear ownership",
-      "Visibility through agreed reporting and reviews"
-    ],
-    capabilities: [
-      "Back-office process management",
-      "Data entry, validation and record maintenance",
-      "Order processing and administrative coordination",
-      "Customer operations and escalation handling",
-      "Sales operations and CRM administration",
-      "Quality assurance and performance reporting"
-    ],
-    process: [
-      {
-        step: "Map the process",
-        detail: "Review your workflows, volumes, systems and service expectations."
-      },
-      {
-        step: "Build & train",
-        detail: "Assign dedicated resources and document procedures and escalation paths."
-      },
-      {
-        step: "Pilot & calibrate",
-        detail: "Start with a supervised pilot and review quality before increasing volume."
-      },
-      {
-        step: "Manage & improve",
-        detail: "Monitor agreed service levels, coach the team and review opportunities to improve."
-      }
-    ],
-    idealFor: [
-      "Businesses scaling operations",
-      "Teams with recurring administrative workloads",
-      "Companies seeking managed process support"
-    ],
-    tools: [
-      "Your CRM and customer support platforms",
-      "Google Workspace and Microsoft 365",
-      "Your order management and reporting systems",
-      "Documented SOPs and quality scorecards"
-    ],
-    pitch: "Move recurring business processes to a managed team, with documented workflows, quality checks and reporting that keep delivery accountable as you scale.",
-    highlights: [
-      "Managed Operations",
-      "Back-Office Support",
-      "Quality & Reporting"
-    ],
-    offerings: [
-      "Business Process Management",
-      "Back-Office Operations",
-      "Data Processing",
-      "Customer Operations",
-      "Sales Administration",
-      "Quality Assurance"
-    ],
-    facts: [
-      {
-        label: "Delivery model",
-        value: "Managed Business Processes"
-      },
-      {
-        label: "Engagement type",
-        value: "Dedicated Team & Process Oversight"
-      }
-    ]
+    packages: {
+      tiers: [
+        {
+          name: "Small",
+          price: "$1,500"
+        },
+        {
+          name: "Medium",
+          price: "$3,000"
+        },
+        {
+          name: "Large",
+          price: "$5,000"
+        }
+      ],
+      features: [
+        {
+          label: "Workflows",
+          values: [
+            "1",
+            "3",
+            "5"
+          ]
+        },
+        {
+          label: "Steps per workflow",
+          values: [
+            "Up to 5",
+            "Up to 5",
+            "Up to 8"
+          ]
+        },
+        {
+          label: "Connected applications",
+          values: [
+            "Up to 2",
+            "Up to 3",
+            "Up to 5"
+          ]
+        },
+        {
+          label: "AI-assisted steps",
+          values: [
+            "1 per workflow",
+            "1 per workflow",
+            "2 per workflow"
+          ]
+        },
+        {
+          label: "Testing & documentation",
+          values: [
+            "Included",
+            "Included",
+            "Included"
+          ]
+        },
+        {
+          label: "Team training sessions",
+          values: [
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          label: "Post-launch support",
+          values: [
+            "14 days",
+            "30 days",
+            "45 days"
+          ]
+        },
+        {
+          label: "Estimated delivery",
+          values: [
+            "2?3 weeks",
+            "4?5 weeks",
+            "6?8 weeks"
+          ]
+        }
+      ]
+    }
   },
 ];
 
@@ -1038,7 +1058,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "d2c-peak-season-support",
     client: "D2C home goods brand",
     industry: "E-commerce & Retail",
-    service: "Dedicated Teams & Virtual Assistance",
+    service: "Business Process Outsourcing (BPO)",
     challenge:
       "Holiday volumes tripled and a three-person in-house team was answering tickets 40 hours late, dragging CSAT to 71%.",
     approach: [
@@ -1060,7 +1080,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "saas-outbound-pipeline",
     client: "B2B workflow software company",
     industry: "SaaS & Technology",
-    service: "Dedicated Teams & Virtual Assistance",
+    service: "Business Process Outsourcing (BPO)",
     challenge:
       "Two local SDRs cost more than the pipeline they produced, and outreach stalled whenever one of them left.",
     approach: [
@@ -1082,7 +1102,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "logistics-24-7-desk",
     client: "Freight forwarding group",
     industry: "Logistics & Supply Chain",
-    service: "Dedicated Teams & Virtual Assistance",
+    service: "Business Process Outsourcing (BPO)",
     challenge:
       "Shipment exceptions raised overnight sat untouched until morning, creating detention charges and customer churn.",
     approach: [
