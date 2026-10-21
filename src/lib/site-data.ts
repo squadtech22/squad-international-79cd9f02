@@ -668,6 +668,148 @@ export const services: Service[] = [
       ]
     }
   },
+  {
+    slug: "custom-software-mobile-app-development",
+    externalUrl: "https://www.squadtechsol.com/services",
+    title: "Custom Software and Mobile App Development",
+    short: "Build software and mobile applications around your business processes and customer needs.",
+    summary: "Custom software and mobile app development through Squad Tech Solutions, from requirements and user experience design to development, testing and launch.",
+    outcomes: [
+      "Software shaped around your workflows",
+      "Connected customer and internal experiences",
+      "A clear path from requirements to launch"
+    ],
+    capabilities: [
+      "Custom business software",
+      "Mobile app development",
+      "User experience and interface design",
+      "API and system integrations",
+      "Quality assurance and testing",
+      "Launch and ongoing maintenance"
+    ],
+    process: [
+      {
+        step: "Discover",
+        detail: "Define the users, requirements and project scope."
+      },
+      {
+        step: "Design",
+        detail: "Map workflows and review interface prototypes."
+      },
+      {
+        step: "Build & test",
+        detail: "Develop the solution and verify core workflows."
+      },
+      {
+        step: "Launch & support",
+        detail: "Release the product and plan ongoing maintenance."
+      }
+    ],
+    idealFor: [
+      "Businesses with custom workflows",
+      "Teams building digital products",
+      "Businesses launching mobile experiences"
+    ],
+    tools: [
+      "Technology selected for your requirements",
+      "Your existing systems and APIs"
+    ],
+    pitch: "Create business software and mobile apps tailored to your workflows, with design, development, integrations and testing delivered through Squad Tech Solutions.",
+    highlights: [
+      "Custom Software",
+      "Mobile Apps",
+      "System Integrations"
+    ],
+    offerings: [
+      "Custom Software",
+      "Mobile App Development",
+      "UI / UX Design",
+      "API Integrations",
+      "Testing & Maintenance"
+    ],
+    facts: [
+      {
+        label: "Delivery partner",
+        value: "Squad Tech Solutions"
+      },
+      {
+        label: "Engagement model",
+        value: "Scoped Development Project"
+      }
+    ]
+  },
+  {
+    slug: "business-process-outsourcing",
+    title: "Business Process Outsourcing (BPO)",
+    short: "Outsource recurring business processes with dedicated people, documented workflows and clear reporting.",
+    summary: "Managed support for recurring customer-facing, administrative and operational processes. We scope the work, build and train the team, document your workflows and track delivery through agreed service levels.",
+    outcomes: [
+      "More capacity for recurring operational work",
+      "Consistent processes and clear ownership",
+      "Visibility through agreed reporting and reviews"
+    ],
+    capabilities: [
+      "Back-office process management",
+      "Data entry, validation and record maintenance",
+      "Order processing and administrative coordination",
+      "Customer operations and escalation handling",
+      "Sales operations and CRM administration",
+      "Quality assurance and performance reporting"
+    ],
+    process: [
+      {
+        step: "Map the process",
+        detail: "Review your workflows, volumes, systems and service expectations."
+      },
+      {
+        step: "Build & train",
+        detail: "Assign dedicated resources and document procedures and escalation paths."
+      },
+      {
+        step: "Pilot & calibrate",
+        detail: "Start with a supervised pilot and review quality before increasing volume."
+      },
+      {
+        step: "Manage & improve",
+        detail: "Monitor agreed service levels, coach the team and review opportunities to improve."
+      }
+    ],
+    idealFor: [
+      "Businesses scaling operations",
+      "Teams with recurring administrative workloads",
+      "Companies seeking managed process support"
+    ],
+    tools: [
+      "Your CRM and customer support platforms",
+      "Google Workspace and Microsoft 365",
+      "Your order management and reporting systems",
+      "Documented SOPs and quality scorecards"
+    ],
+    pitch: "Move recurring business processes to a managed team, with documented workflows, quality checks and reporting that keep delivery accountable as you scale.",
+    highlights: [
+      "Managed Operations",
+      "Back-Office Support",
+      "Quality & Reporting"
+    ],
+    offerings: [
+      "Business Process Management",
+      "Back-Office Operations",
+      "Data Processing",
+      "Customer Operations",
+      "Sales Administration",
+      "Quality Assurance"
+    ],
+    facts: [
+      {
+        label: "Delivery model",
+        value: "Managed Business Processes"
+      },
+      {
+        label: "Engagement type",
+        value: "Dedicated Team & Process Oversight"
+      }
+    ]
+  },
 ];
 
 export type Industry = {
@@ -1082,7 +1224,7 @@ export const posts = [
     slug: "smart-scaling-strategic-business-process-outsourcing",
     title: "Smart scaling: the power of strategic business process outsourcing",
     excerpt:
-      "Outsourcing judged by the capacity it returns to a business, not by the invoice — the four service areas, the compliance standards, and the verification signals that actually make it work.",
+      "Outsourcing judged by the capacity it returns to a business, not by the invoice — the six service areas, the compliance standards, and the verification signals that actually make it work.",
     date: "2026-09-28",
     readingTime: "5 min read",
     category: "Growth",

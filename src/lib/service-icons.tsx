@@ -1,4 +1,4 @@
-import { Stethoscope, Workflow, Globe, Users, Briefcase, type LucideIcon } from "lucide-react";
+import { Stethoscope, Workflow, Globe, Users, Briefcase, Code2, Building2, type LucideIcon } from "lucide-react";
 
 /**
  * One icon per service, keyed by slug rather than array position so reordering
@@ -13,6 +13,8 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
   "ai-workflow-automation": Workflow,
   "website-design-development": Globe,
   "virtual-business-assistance": Users,
+  "custom-software-mobile-app-development": Code2,
+  "business-process-outsourcing": Building2,
 };
 
 /**
