@@ -1,3 +1,4 @@
+import { ServiceLink } from "@/components/service-link";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -476,14 +477,14 @@ export function SiteHeader() {
               <div className="grid auto-rows-fr grid-cols-2 gap-2">
                 {services.map((s) => (
                   <DropdownMenuItem key={s.slug} asChild className={serviceItemClass}>
-                    <Link to="/services/$slug" params={{ slug: s.slug }}>
+                    <ServiceLink service={s}>
                       <MenuItemText
                         title={s.title}
                         description={s.short}
                         highlights={s.highlights}
                         icon={serviceIcon(s.slug)}
                       />
-                    </Link>
+                    </ServiceLink>
                   </DropdownMenuItem>
                 ))}
               </div>
@@ -528,7 +529,7 @@ export function SiteHeader() {
 
               {/*
                 Three columns rather than the services' two: there are seven of
-                these against four, and the cards carry a name and a line each
+                these against four services, and the cards carry a name and a line each
                 where a service card also carries chips. Two columns would run to
                 four rows and make the panel far taller than the services one.
               */}
@@ -606,15 +607,14 @@ export function SiteHeader() {
                   All Services
                 </Link>
                 {services.map((s) => (
-                  <Link
+                  <ServiceLink
                     key={s.slug}
-                    to="/services/$slug"
-                    params={{ slug: s.slug }}
+                    service={s}
                     onClick={() => setOpen(false)}
                     className={mobileSubLinkClass}
                   >
                     {s.title}
-                  </Link>
+                  </ServiceLink>
                 ))}
               </div>
             )}

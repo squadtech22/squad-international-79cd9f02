@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { ChevronDown, ExternalLink, Mail, MapPin } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Briefcase, ChevronDown, ExternalLink, Link2, Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,8 @@ import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
 import { site } from "@/lib/site-data";
 import { sendApplication } from "@/lib/send-application";
-import { parseRichContent, RichContent } from "@/lib/rich-content";
+import { parseRichContent } from "@/lib/rich-content";
+import { JobDescription } from "@/lib/job-content";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
@@ -70,65 +71,185 @@ function applyLabel(source: string) {
 }
 
 /**
- * One open role. Descriptions start as a short preview of a few lines, so the
- * list of roles can be scanned, and open in full when the reader asks.
+ * The job's anchor on this page, so each open role has a link of its own
+ * (squadinternational.net/careers#customer-support-agent). The admin portal
+ * builds the same slug for its "Copy link" button, so keep the two in step.
  */
-function JobCard({ role, onApply }: { role: JobRole; onApply: (title: string) => void }) {
-  const [expanded, setExpanded] = useState(false);
+function jobSlug(role: Pick<JobRole, "id" | "title">) {
+  const slug = (role.title ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug || role.id || "job";
+}
+
+/**
+ * One open role. Cards start as just the title and terms, so the list can be
+ * scanned, and open to the full description and apply options on click. The
+ * details stay mounted and animate their height (grid rows 0fr → 1fr), so the
+ * card opens and closes smoothly rather than jumping.
+ */
+function JobCard({
+  role,
+  onApply,
+  open,
+  onToggle,
+}: {
+  role: JobRole;
+  onApply: (title: string) => void;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const slug = jobSlug(role);
+  const detailsId = `${slug}-details`;
   const nodes = parseRichContent(role.content, role.summary);
-  const isLong = (role.summary ?? "").length > 160;
-  const descriptionId = `job-${role.id ?? role.title}`.replace(/\s+/g, "-");
+  const cardRef = useRef<HTMLElement>(null);
+
+  // A card above this one may close as this one opens, which pulls this one up
+  // the page. Once both have settled, bring its top back into view if it left.
+  useEffect(() => {
+    if (!open) return;
+    const timer = window.setTimeout(() => {
+      const top = cardRef.current?.getBoundingClientRect().top ?? 0;
+      if (top < 80) {
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        cardRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      }
+    }, 450);
+    return () => window.clearTimeout(timer);
+  }, [open]);
+
+  const copyLink = async () => {
+    const url = `${window.location.origin}/careers#${slug}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Job link copied", { description: url });
+    } catch {
+      toast("Job link", { description: url });
+    }
+  };
 
   return (
-    <article className="flex flex-col rounded-lg border border-border bg-card p-7 card-pop hover:border-marigold hover:shadow-[var(--shadow-elevated)]">
-      <h3 className="text-lg text-charcoal">{role.title}</h3>
-      <p className="mt-2 text-xs uppercase tracking-wider text-marigold">
-        {role.type} · {role.location}
-      </p>
-      {role.mapUrl && (
-        <a
-          href={role.mapUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-1.5 self-start text-xs font-semibold text-charcoal hover:text-marigold"
-          title={role.address}
-        >
-          <MapPin className="size-3.5" /> View on map
-        </a>
-      )}
-      <div className="mt-4 flex-1">
-        <div
-          id={descriptionId}
-          className={`relative overflow-hidden ${isLong && !expanded ? "max-h-24 job-fade" : ""}`}
-        >
-          <RichContent nodes={nodes} className="rich-job text-sm text-muted-foreground" />
-        </div>
-        {isLong && (
-          <button
-            type="button"
-            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-charcoal hover:text-marigold"
-            aria-expanded={expanded}
-            aria-controls={descriptionId}
-            onClick={() => setExpanded((e) => !e)}
+    <article
+      ref={cardRef}
+      id={slug}
+      className={`group/job relative scroll-mt-28 overflow-hidden rounded-xl border bg-card transition-[border-color,box-shadow] duration-300 ${
+        open
+          ? "border-marigold/60 shadow-[var(--shadow-elevated)]"
+          : "border-border hover:border-marigold/50 hover:shadow-[var(--shadow-elevated)]"
+      }`}
+    >
+      {/* Accent bar that grows down the left edge as the card opens. */}
+      <span
+        aria-hidden="true"
+        className={`absolute inset-y-0 left-0 w-1 origin-top bg-marigold transition-transform motion-reduce:transition-none ${
+          open
+            ? "scale-y-100 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            : "scale-y-0 duration-[450ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+        }`}
+      />
+
+      <button
+        type="button"
+        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left md:px-7"
+        aria-expanded={open}
+        aria-controls={detailsId}
+        onClick={onToggle}
+      >
+        <span className="min-w-0">
+          <h3 className="text-base text-charcoal transition-colors group-hover/job:text-marigold md:text-lg">
+            {role.title}
+          </h3>
+          <span className="mt-2.5 flex flex-wrap gap-2">
+            {role.type && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-marigold/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-marigold">
+                <Briefcase className="size-3" /> {role.type}
+              </span>
+            )}
+            {role.location && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <MapPin className="size-3" /> {role.location}
+              </span>
+            )}
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-2.5 text-xs font-semibold text-charcoal">
+          <span className="hidden sm:inline">{open ? "Hide details" : "View details"}</span>
+          <span
+            className={`grid size-9 place-items-center rounded-full border transition-all duration-[400ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${
+              open
+                ? "rotate-180 border-marigold bg-marigold text-primary-foreground"
+                : "border-border group-hover/job:border-marigold group-hover/job:text-marigold"
+            }`}
           >
-            {expanded ? "Show less" : "View full job details"}
-            <ChevronDown className={`size-3.5 transition-transform ${expanded ? "rotate-180" : ""}`} />
-          </button>
-        )}
-      </div>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <Button variant="outlineDark" onClick={() => onApply(role.title)}>
-          Apply now
-        </Button>
-        {(role.applyLinks ?? [])
-          .filter((l) => /^https?:\/\//i.test(l.url ?? ""))
-          .map((l) => (
-            <Button key={`${l.source}-${l.url}`} variant="outlineDark" asChild>
-              <a href={l.url} target="_blank" rel="noopener noreferrer">
-                {applyLabel(l.source)} <ExternalLink />
-              </a>
-            </Button>
-          ))}
+            <ChevronDown className="size-4" />
+          </span>
+        </span>
+      </button>
+
+      {/*
+        Opening eases out (fast, then settles). Closing eases in and out over a
+        similar time: an ease-out close collapses most of the height in the first
+        few frames, which reads as a snap rather than the reverse of opening.
+      */}
+      <div
+        id={detailsId}
+        inert={!open}
+        className={`grid transition-[grid-template-rows] motion-reduce:transition-none ${
+          open
+            ? "grid-rows-[1fr] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            : "grid-rows-[0fr] duration-[450ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div
+            className={`mx-6 border-t border-border pb-7 pt-5 transition-[opacity,translate] motion-reduce:transition-none md:mx-7 ${
+              open
+                ? "translate-y-0 opacity-100 delay-100 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                : "-translate-y-2 opacity-0 duration-300 ease-in"
+            }`}
+          >
+            <div className="flex flex-wrap items-center gap-2">
+              {role.mapUrl && (
+                <a
+                  href={role.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-charcoal transition-colors hover:border-marigold hover:text-marigold"
+                  title={role.address}
+                >
+                  <MapPin className="size-3.5" /> View on map
+                </a>
+              )}
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-charcoal transition-colors hover:border-marigold hover:text-marigold"
+                onClick={copyLink}
+              >
+                <Link2 className="size-3.5" /> Copy link to this job
+              </button>
+            </div>
+
+            <div className="mt-6 max-w-4xl">
+              <JobDescription nodes={nodes} />
+            </div>
+
+            <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-border pt-6">
+              <Button variant="marigold" onClick={() => onApply(role.title)}>
+                Apply now
+              </Button>
+              {(role.applyLinks ?? [])
+                .filter((l) => /^https?:\/\//i.test(l.url ?? ""))
+                .map((l) => (
+                  <Button key={`${l.source}-${l.url}`} variant="outlineDark" asChild>
+                    <a href={l.url} target="_blank" rel="noopener noreferrer">
+                      {applyLabel(l.source)} <ExternalLink />
+                    </a>
+                  </Button>
+                ))}
+            </div>
+          </div>
+        </div>
       </div>
     </article>
   );
@@ -173,10 +294,12 @@ function validateCv(file: File): string | null {
 }
 
 function CareersPage() {
+  const navigate = Route.useNavigate();
   const [role, setRole] = useState(OPEN_APPLICATION);
   const [submitting, setSubmitting] = useState(false);
   const [roles, setRoles] = useState<JobRole[]>([]);
   const [cvError, setCvError] = useState<string | null>(null);
+  const [openJob, setOpenJob] = useState<string | null>(null);
 
   // Fetch live active job openings from Firestore
   useEffect(() => {
@@ -198,6 +321,32 @@ function CareersPage() {
       console.warn("Firestore jobs connection:", e);
     }
   }, []);
+
+  // A shared job link (/careers#slug) opens that job once the roles arrive.
+  const linkedJobHandled = useRef(false);
+  useEffect(() => {
+    if (linkedJobHandled.current || roles.length === 0) return;
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (!hash) return;
+    linkedJobHandled.current = true;
+    if (!roles.some((r) => jobSlug(r) === hash)) return;
+    setOpenJob(hash);
+    requestAnimationFrame(() => document.getElementById(hash)?.scrollIntoView({ block: "start" }));
+  }, [roles]);
+
+  const toggleJob = (slug: string) => {
+    const next = openJob === slug ? null : slug;
+    setOpenJob(next);
+    // Keep the address bar on the open job, so it can be copied from there too.
+    // Updating the job link is local UI state, so don't reset the page's scroll
+    // position or let hash navigation compete with the card's scroll handling.
+    void navigate({
+      hash: next ?? "",
+      replace: true,
+      resetScroll: false,
+      hashScrollIntoView: false,
+    });
+  };
 
   /** Preselect the role and jump to the form, so applying stays on one page. */
   const applyFor = (title: string) => {
@@ -266,7 +415,7 @@ function CareersPage() {
           // rather than reporting success.
           if (cv) {
             toast.error("We couldn't upload your CV", {
-              description: `Please try again, or email it to ${site.email}.`,
+              description: `Please try again, or email it to ${site.careersEmail}.`,
             });
             return;
           }
@@ -325,9 +474,15 @@ function CareersPage() {
 
       <section className="container-page py-20 md:py-24">
         <SectionHeading eyebrow="Open roles" title="Currently hiring" />
-        <div className="mt-12 grid items-start gap-5 md:grid-cols-2">
+        <div className="mx-auto mt-12 flex max-w-5xl flex-col gap-4">
           {roles.map((r) => (
-            <JobCard key={r.id ?? r.title} role={r} onApply={applyFor} />
+            <JobCard
+              key={r.id ?? r.title}
+              role={r}
+              onApply={applyFor}
+              open={openJob === jobSlug(r)}
+              onToggle={() => toggleJob(jobSlug(r))}
+            />
           ))}
         </div>
       </section>
@@ -450,8 +605,8 @@ function CareersPage() {
             </Button>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
               Trouble uploading? Link to your CV instead, or email{" "}
-              <a href={`mailto:${site.email}`} className="text-marigold hover:underline">
-                {site.email}
+              <a href={`mailto:${site.careersEmail}`} className="text-marigold hover:underline">
+                {site.careersEmail}
               </a>{" "}
               with it attached.
             </p>

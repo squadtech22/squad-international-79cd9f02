@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import { ServiceLink } from "@/components/service-link";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Mail, Phone, MapPin, ChevronDown } from "lucide-react";
 import { SubscribeForm } from "@/components/subscribe-form";
 import { services, industries, site } from "@/lib/site-data";
@@ -7,6 +8,12 @@ import logo from "@/assets/squad-logo.png";
 
 
 export function SiteFooter() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const email = /^\/careers\/?$/.test(pathname)
+    ? site.careersEmail
+    : /^\/contact\/?$/.test(pathname)
+      ? site.infoEmail
+      : site.email;
   return (
     <footer className="bg-charcoal text-offwhite">
       <div className="mx-auto w-full max-w-[84rem]">
@@ -27,8 +34,8 @@ export function SiteFooter() {
             <ul className="mt-5 space-y-2 text-sm text-offwhite/65">
               <li className="flex items-center gap-2">
                 <Mail className="size-4 text-marigold" />
-                <a href={`mailto:${site.email}`} className="hover:text-marigold">
-                  {site.email}
+                <a href={`mailto:${email}`} className="hover:text-marigold">
+                  {email}
                 </a>
               </li>
               <li className="flex items-center gap-2">
@@ -43,13 +50,12 @@ export function SiteFooter() {
           <FooterCol title="Services">
             {services.map((s) => (
               <li key={s.slug}>
-                <Link
-                  to="/services/$slug"
-                  params={{ slug: s.slug }}
+                <ServiceLink
+                  service={s}
                   className="text-sm text-offwhite/65 transition-colors hover:text-marigold"
                 >
                   {s.title}
-                </Link>
+                </ServiceLink>
               </li>
             ))}
           </FooterCol>
@@ -202,6 +208,18 @@ export function SiteFooter() {
           <div className="flex flex-col items-center justify-between gap-3 px-8 py-6 text-xs text-offwhite/50 sm:flex-row md:px-12">
             <p>
               © {new Date().getFullYear()} {site.name}. All rights reserved.
+            </p>
+            <p>
+              Developed by{" "}
+              <a
+                href="https://squadtechsol.com"
+                target="_blank"
+                rel="noopener"
+                className="text-offwhite/70 transition-colors hover:text-marigold"
+              >
+                Squad Tech
+              </a>
+              , our technology partner
             </p>
             <p>Business Process Outsourcing · Dedicated Teams · Business Support</p>
           </div>

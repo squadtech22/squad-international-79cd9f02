@@ -1,3 +1,4 @@
+import { ServiceLink } from "@/components/service-link";
 import { useState } from "react";
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import {
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { BookingDialog } from "@/components/booking-dialog";
 import { CtaBand } from "@/components/cta-band";
+import { ServicePackages } from "@/components/service-packages";
 import { services, site } from "@/lib/site-data";
 
 /**
@@ -20,16 +22,15 @@ import { services, site } from "@/lib/site-data";
  * closest current service where there is one and to the services index where the
  * capability has no successor.
  *
- * The first three date from the rename of the original delivery lines. The last
- * two come from the move to four services: e-commerce support became part of
- * customer support and keeps a direct equivalent, while bookkeeping was dropped
- * as a service line and has nowhere specific to send a visitor.
+ * Sales and customer support now belong to Dedicated Teams & Virtual Assistance.
  */
 const RETIRED_SLUGS = new Map<string, string>([
   ["dedicated-team-support", "/services"],
   ["operational-management", "/services"],
   ["growth-support", "/services"],
-  ["ecommerce-customer-support", "/services/customer-support"],
+  ["ecommerce-customer-support", "/services/virtual-business-assistance"],
+  ["customer-support", "/services/virtual-business-assistance"],
+  ["lead-generation", "/services/virtual-business-assistance"],
   ["accounting-bookkeeping", "/services"],
 ]);
 
@@ -39,8 +40,6 @@ const RETIRED_SLUGS = new Map<string, string>([
  * previews the same as every other page.
  */
 const SERVICE_OG_IMAGES = new Set([
-  "customer-support",
-  "lead-generation",
   "medical-billing-healthcare",
   "virtual-business-assistance",
 ]);
@@ -51,6 +50,9 @@ const serviceOgImage = (slug: string) =>
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
     const service = services.find((s) => s.slug === params.slug);
+    if (service?.externalUrl) {
+      throw redirect({ href: service.externalUrl, statusCode: 301 });
+    }
     if (!service) {
       const retiredTarget = RETIRED_SLUGS.get(params.slug);
       if (retiredTarget) throw redirect({ to: retiredTarget, statusCode: 301 });
@@ -143,6 +145,8 @@ function ServiceDetail() {
         </div>
       </section>
 
+      <ServicePackages key={service.slug} service={service} />
+
       <section className="container-page grid gap-14 py-20 lg:grid-cols-[1.1fr_0.9fr] md:py-24">
         <div>
           <h2 className="text-3xl text-charcoal">What the team handles</h2>
@@ -156,6 +160,20 @@ function ServiceDetail() {
               </li>
             ))}
           </ul>
+
+          {service.supportAreas?.map((area) => (
+            <section key={area.title} className="mt-16">
+              <h2 className="text-3xl text-charcoal">{area.title}</h2>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{area.summary}</p>
+              <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+                {area.capabilities.map((capability) => (
+                  <li key={capability} className="rounded-md border border-border bg-card px-5 py-4 text-sm text-charcoal">
+                    {capability}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
 
           <h2 className="mt-16 text-3xl text-charcoal">Tools we work in</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -293,13 +311,12 @@ function ServiceDetail() {
             <ul className="mt-4 space-y-3">
               {others.map((o) => (
                 <li key={o.slug}>
-                  <Link
-                    to="/services/$slug"
-                    params={{ slug: o.slug }}
+                  <ServiceLink
+                    service={o}
                     className="group inline-flex items-center gap-2 text-sm font-medium text-charcoal hover:text-marigold"
                   >
                     {o.title} <ArrowRight className="size-4" />
-                  </Link>
+                  </ServiceLink>
                 </li>
               ))}
             </ul>

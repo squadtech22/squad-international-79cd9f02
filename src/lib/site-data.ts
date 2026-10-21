@@ -28,7 +28,9 @@ export const site = {
   calendly: "https://calendly.com/squadinternational/30min",
   // wa.me needs the country code with no "+" and no leading zero: +92 313 297 2974.
   whatsapp: "https://wa.me/923132972974",
-  email: "Hr@squadinternational.net",
+  email: "inquire@squadinternational.net",
+  infoEmail: "info@squadinternational.net",
+  careersEmail: "hr@squadinternational.net",
   phone: "+92 313 297 2974",
   phoneHref: "tel:+923132972974",
   // Google Business Profile: "Squad International", BPO company, PECHS Karachi.
@@ -135,11 +137,13 @@ export const site = {
 
 export type Service = {
   slug: string;
+  externalUrl?: string;
   title: string;
   short: string;
   summary: string;
   outcomes: string[];
   capabilities: string[];
+  supportAreas?: { title: string; summary: string; capabilities: string[] }[];
   process: { step: string; detail: string }[];
   idealFor: string[];
   tools: string[];
@@ -163,6 +167,10 @@ export type Service = {
    * out as a pair.
    */
   facts: { label: string; value: string }[];
+  packages?: {
+    tiers: { name: string; price: string }[];
+    features: { label: string; values: string[] }[];
+  };
   /**
    * How the line is priced. Optional because most engagements are scoped and
    * quoted rather than listed, so the sidebar hides this when absent. More than
@@ -249,115 +257,12 @@ export const services: Service[] = [
     ],
   },
   {
-    slug: "lead-generation",
-    title: "Outbound Sales Support",
-    short:
-      "Dedicated prospecting support that keeps your sales pipeline active and your internal team focused on qualified leads.",
-    summary:
-      "Research, list building, multichannel outreach and appointment setting run by SDR pods that report on pipeline, not activity vanity metrics.",
-    outcomes: [
-      "Predictable monthly qualified meeting volume",
-      "Clean, enriched prospect data in your CRM",
-      "Lower cost per booked meeting than local SDR hiring",
-    ],
-    capabilities: [
-      "ICP definition and list building",
-      "Data enrichment and verification",
-      "Cold email and LinkedIn sequencing",
-      "Outbound calling and appointment setting",
-      "Inbound lead qualification and routing",
-      "Pipeline reporting and attribution",
-    ],
-    process: [
-      { step: "ICP & offer workshop", detail: "We align on segments, messaging angles and qualification criteria." },
-      { step: "Data & infrastructure", detail: "Lists, domains, sequencing tools and CRM routing are set up." },
-      { step: "Launch & iterate", detail: "Weekly message testing against reply and meeting-rate targets." },
-      { step: "Scale", detail: "Add channels or seats once cost per meeting is proven." },
-    ],
-    idealFor: ["B2B services", "Software and technology", "Logistics and manufacturing"],
-    tools: [
-      "Apollo, ZoomInfo and Cognism",
-      "Instantly, Smartlead and Lemlist",
-      "LinkedIn Sales Navigator",
-      "HubSpot, Salesforce and Close",
-      "Clay and Dropcontact enrichment",
-      "Aircall and power dialers",
-    ],
-    pitch:
-      "Keep your sales pipeline moving with dedicated prospecting support — without increasing the internal overhead required to manage every stage of outreach and qualification.",
-    highlights: ["Cold Calling", "Lead Qualification", "Appointment Setting"],
-    offerings: [
-      "Cold Calling",
-      "Lead Qualification",
-      "Appointment Setting",
-      "SDR Support",
-      "Sales Follow-Up",
-    ],
-    facts: [
-      { label: "Campaign model", value: "Client-Provided Leads/Data" },
-      { label: "Team setup", value: "Dedicated Callers / SDRs" },
-    ],
-  },
-  {
-    slug: "customer-support",
-    title: "Customer Support Outsourcing",
-    short:
-      "Reliable customer support that helps you increase service capacity without continuously expanding your internal team.",
-    summary:
-      "Trained support agents handling voice, email, chat and ticketing on your brand and your tooling — with the QA, coverage planning and escalation paths of an in-house function.",
-    outcomes: [
-      "First response times under 15 minutes on live channels",
-      "CSAT held above 90% through structured QA",
-      "24/7 or follow-the-sun coverage without hiring locally",
-    ],
-    capabilities: [
-      "Inbound voice and callback handling",
-      "Email, chat and social response",
-      "Ticket triage and escalation management",
-      "Order, billing and account support",
-      "Technical tier-1 support",
-      "Knowledge base and macro development",
-    ],
-    process: [
-      { step: "Coverage modelling", detail: "Volumes, peak hours and channels define headcount and shifts." },
-      { step: "Product training", detail: "Agents complete structured product and tone-of-voice training." },
-      { step: "Pilot with QA", detail: "A supervised ramp period with daily scorecards and calibration." },
-      { step: "Steady state", detail: "SLA reporting, QA sampling and continuous coaching." },
-    ],
-    idealFor: ["E-commerce and D2C", "SaaS platforms", "Healthcare and insurance services"],
-    tools: [
-      "Zendesk, Freshdesk and Intercom",
-      "Gorgias and Shopify",
-      "Salesforce Service Cloud",
-      "Talkdesk, Aircall and RingCentral",
-      "Front and Help Scout",
-      "Your knowledge base and macro library",
-    ],
-    pitch:
-      "Expand your customer support capacity with dedicated resources that work around your processes — helping you serve customers consistently without carrying the cost of building every support role internally.",
-    highlights: ["Inbound Calls", "Live Chat + Email", "Ticket Management"],
-    offerings: [
-      "Inbound Calls",
-      "Live Chat + Email",
-      "Ticket Management",
-      "Voice",
-      "Booking / Reservations / Customer Care",
-      "Tickets / Helpdesk",
-      "Email",
-      "Live Chat",
-    ],
-    facts: [
-      { label: "Support model", value: "Dedicated Support Team" },
-      { label: "Channel coverage", value: "Voice, Chat, Email & Tickets" },
-    ],
-  },
-  {
     slug: "virtual-business-assistance",
     title: "Dedicated Teams & Virtual Assistance",
     short:
-      "Move recurring administrative and desk work to dedicated resources built around your existing tools and workflow.",
+      "Dedicated teams for outbound sales, customer support and virtual assistance, built around your tools and workflow.",
     summary:
-      "Dedicated assistants who absorb the administrative load slowing your business down — calendar and inbox management, CRM hygiene, reporting, research, documentation and day-to-day coordination.",
+      "Dedicated sales, customer support and virtual assistance teams handling prospecting, outreach, appointment setting, voice, email, chat and ticketing alongside administrative work — calendar and inbox management, CRM hygiene, reporting, research, documentation and day-to-day coordination.",
     outcomes: [
       "Reclaim 15-25 hours per week for senior staff",
       "Lower cost per administrative hour by up to 60%",
@@ -371,13 +276,39 @@ export const services: Service[] = [
       "Research, reporting and presentation prep",
       "Vendor and supplier coordination",
     ],
+    supportAreas: [
+      {
+        title: "Outbound Sales Support",
+        summary: "Research, list building, multichannel outreach and appointment setting run by SDR pods that report on pipeline, not activity vanity metrics.",
+        capabilities: [
+          "ICP definition and list building",
+          "Data enrichment and verification",
+          "Cold email and LinkedIn sequencing",
+          "Outbound calling and appointment setting",
+          "Inbound lead qualification and routing",
+          "Pipeline reporting and attribution",
+        ],
+      },
+      {
+        title: "Customer Support Outsourcing",
+        summary: "Trained support agents handling voice, email, chat and ticketing on your brand and your tooling — with the QA, coverage planning and escalation paths of an in-house function.",
+        capabilities: [
+          "Inbound voice and callback handling",
+          "Email, chat and social response",
+          "Ticket triage and escalation management",
+          "Order, billing and account support",
+          "Technical tier-1 support",
+          "Knowledge base and macro development",
+        ],
+      },
+    ],
     process: [
       { step: "Scope & role design", detail: "We map the tasks, tools and volumes before proposing a team shape." },
       { step: "Recruit & vet", detail: "Shortlisted candidates are screened for domain, language and tooling fit." },
       { step: "Onboard & document", detail: "Your workflows are turned into SOPs owned by our team lead." },
       { step: "Run & improve", detail: "Weekly reporting, QA sampling and quarterly scope reviews." },
     ],
-    idealFor: ["Founder-led businesses", "Professional services firms", "Agencies and consultancies"],
+    idealFor: ["Founder-led businesses", "Professional services firms", "Agencies and consultancies", "B2B sales teams", "E-commerce and D2C", "SaaS platforms"],
     tools: [
       "Google Workspace and Microsoft 365",
       "HubSpot, Salesforce and Pipedrive",
@@ -385,11 +316,29 @@ export const services: Service[] = [
       "Xero, QuickBooks and Bill.com",
       "Asana, ClickUp and Monday.com",
       "DocuSign and PandaDoc",
+      "Apollo, ZoomInfo and Cognism",
+      "Instantly, Smartlead and Lemlist",
+      "LinkedIn Sales Navigator",
+      "HubSpot, Salesforce and Close",
+      "Clay and Dropcontact enrichment",
+      "Aircall and power dialers",
+      "Zendesk, Freshdesk and Intercom",
+      "Gorgias and Shopify",
+      "Salesforce Service Cloud",
+      "Talkdesk, Aircall and RingCentral",
+      "Front and Help Scout",
+      "Your knowledge base and macro library",
     ],
     pitch:
-      "Move recurring administrative and desk work to dedicated support so your internal team can spend more time on the work that drives the business forward.",
-    highlights: ["Data Entry & Admin Support", "Research", "CRM & Order Processing"],
+      "Build dedicated teams for outbound sales, customer support and virtual assistance. From prospecting and appointment setting to customer care and back-office work, we add capacity around your existing processes.",
+    highlights: ["Outbound Sales Support", "Customer Support", "Virtual Assistance"],
     offerings: [
+      "Outbound Sales Support",
+      "Customer Support Outsourcing",
+      "Cold Calling & Lead Qualification",
+      "Appointment Setting & SDR Support",
+      "Inbound Calls, Live Chat & Email",
+      "Ticket Management",
       "Data Entry & Admin Support",
       "Research",
       "CRM & Order Processing",
@@ -403,6 +352,321 @@ export const services: Service[] = [
       { label: "Resource model", value: "Dedicated Talent" },
       { label: "Engagement type", value: "VA, Specialist or Full Team" },
     ],
+  },
+  {
+    process: [
+      {
+        step: "Scope the project",
+        detail: "Confirm your goals, requirements and package scope."
+      },
+      {
+        step: "Build & review",
+        detail: "Develop the solution with regular reviews and feedback."
+      },
+      {
+        step: "Test & launch",
+        detail: "Complete testing, documentation and team training before handover."
+      },
+      {
+        step: "Post-launch support",
+        detail: "Support your team during the included support period."
+      }
+    ],
+    facts: [
+      {
+        label: "Project packages",
+        value: "Small, Medium & Large"
+      },
+      {
+        label: "Pricing model",
+        value: "One-time project fee"
+      }
+    ],
+    slug: "ai-workflow-automation",
+    externalUrl: "https://www.squadtechsol.com/services",
+    title: "AI Workflow Automation",
+    short: "Automate repetitive business tasks, connect your tools and streamline operations with AI-assisted workflows.",
+    summary: "Automate repetitive business tasks, connect your tools, and streamline operations with AI-assisted workflows. Includes testing, documentation, team training, and post-launch support.",
+    outcomes: [
+      "Reduce repetitive manual work",
+      "Connect business tools and processes",
+      "Equip your team with documented workflows"
+    ],
+    capabilities: [
+      "Business workflow mapping",
+      "Connected application integrations",
+      "AI-assisted workflow steps",
+      "Workflow testing and documentation",
+      "Team training sessions",
+      "Post-launch support"
+    ],
+    idealFor: [
+      "Businesses with repetitive tasks",
+      "Operations and administrative teams",
+      "Teams using multiple business applications"
+    ],
+    tools: [
+      "Your existing business applications",
+      "Workflow automation platforms",
+      "AI tools selected for your workflow"
+    ],
+    pitch: "Connect your tools and automate recurring tasks with AI-assisted workflows, testing, documentation, training and post-launch support.",
+    highlights: [
+      "AI-Assisted Workflows",
+      "App Integrations",
+      "Team Training"
+    ],
+    offerings: [
+      "Workflow Automation",
+      "Connected Applications",
+      "AI-Assisted Steps",
+      "Testing & Documentation",
+      "Team Training"
+    ],
+    packages: {
+      tiers: [
+        {
+          name: "Small",
+          price: "$1,500"
+        },
+        {
+          name: "Medium",
+          price: "$3,000"
+        },
+        {
+          name: "Large",
+          price: "$5,000"
+        }
+      ],
+      features: [
+        {
+          label: "Workflows",
+          values: [
+            "1",
+            "3",
+            "5"
+          ]
+        },
+        {
+          label: "Steps per workflow",
+          values: [
+            "Up to 5",
+            "Up to 5",
+            "Up to 8"
+          ]
+        },
+        {
+          label: "Connected applications",
+          values: [
+            "Up to 2",
+            "Up to 3",
+            "Up to 5"
+          ]
+        },
+        {
+          label: "AI-assisted steps",
+          values: [
+            "1 per workflow",
+            "1 per workflow",
+            "2 per workflow"
+          ]
+        },
+        {
+          label: "Testing & documentation",
+          values: [
+            "Included",
+            "Included",
+            "Included"
+          ]
+        },
+        {
+          label: "Team training sessions",
+          values: [
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          label: "Post-launch support",
+          values: [
+            "14 days",
+            "30 days",
+            "45 days"
+          ]
+        },
+        {
+          label: "Estimated delivery",
+          values: [
+            "2?3 weeks",
+            "4?5 weeks",
+            "6?8 weeks"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    process: [
+      {
+        step: "Scope the project",
+        detail: "Confirm your goals, requirements and package scope."
+      },
+      {
+        step: "Build & review",
+        detail: "Develop the solution with regular reviews and feedback."
+      },
+      {
+        step: "Test & launch",
+        detail: "Complete testing, documentation and team training before handover."
+      },
+      {
+        step: "Post-launch support",
+        detail: "Support your team during the included support period."
+      }
+    ],
+    facts: [
+      {
+        label: "Project packages",
+        value: "Small, Medium & Large"
+      },
+      {
+        label: "Pricing model",
+        value: "One-time project fee"
+      }
+    ],
+    slug: "website-design-development",
+    externalUrl: "https://www.squadtechsol.com/services",
+    title: "Website Design & Development",
+    short: "Professional, responsive websites for your business, from a focused company website to an inquiry-driven platform or ecommerce store.",
+    summary: "Professional, responsive websites built for your business, from a focused company website to an inquiry-driven platform or ecommerce store. Includes basic on-page SEO, CMS training, revisions, and post-launch support.",
+    outcomes: [
+      "Present your business across desktop and mobile",
+      "Capture inquiries through contact forms",
+      "Manage website content with CMS training"
+    ],
+    capabilities: [
+      "Responsive website design and development",
+      "Contact and inquiry forms",
+      "Basic on-page SEO",
+      "CMS setup and training",
+      "Ecommerce setup in the Large package",
+      "Revision rounds and post-launch support"
+    ],
+    idealFor: [
+      "Company and professional service websites",
+      "Businesses generating online inquiries",
+      "Ecommerce businesses"
+    ],
+    tools: [
+      "Content management systems suited to your business",
+      "Responsive web technologies",
+      "Ecommerce platforms where included"
+    ],
+    pitch: "Launch a responsive business website, inquiry platform or ecommerce store with basic on-page SEO, CMS training and post-launch support.",
+    highlights: [
+      "Responsive Websites",
+      "Basic On-Page SEO",
+      "CMS Training"
+    ],
+    offerings: [
+      "Website Design & Development",
+      "Responsive Design",
+      "Contact & Inquiry Forms",
+      "Basic On-Page SEO",
+      "CMS Training",
+      "Ecommerce Setup"
+    ],
+    packages: {
+      tiers: [
+        {
+          name: "Small",
+          price: "$1,500"
+        },
+        {
+          name: "Medium",
+          price: "$3,000"
+        },
+        {
+          name: "Large",
+          price: "$5,000"
+        }
+      ],
+      features: [
+        {
+          label: "Pages",
+          values: [
+            "Up to 5",
+            "Up to 10",
+            "Up to 15"
+          ]
+        },
+        {
+          label: "Responsive design",
+          values: [
+            "Included",
+            "Included",
+            "Included"
+          ]
+        },
+        {
+          label: "Contact & inquiry forms",
+          values: [
+            "1",
+            "3",
+            "5"
+          ]
+        },
+        {
+          label: "Basic on-page SEO",
+          values: [
+            "Included",
+            "Included",
+            "Included"
+          ]
+        },
+        {
+          label: "CMS training",
+          values: [
+            "Included",
+            "Included",
+            "Included"
+          ]
+        },
+        {
+          label: "Ecommerce setup",
+          values: [
+            "Not included",
+            "Not included",
+            "Up to 30 products"
+          ]
+        },
+        {
+          label: "Revision rounds",
+          values: [
+            "2",
+            "3",
+            "3"
+          ]
+        },
+        {
+          label: "Post-launch support",
+          values: [
+            "14 days",
+            "30 days",
+            "45 days"
+          ]
+        },
+        {
+          label: "Estimated delivery",
+          values: [
+            "2?3 weeks",
+            "4?5 weeks",
+            "6?8 weeks"
+          ]
+        }
+      ]
+    }
   },
 ];
 
@@ -632,7 +896,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "d2c-peak-season-support",
     client: "D2C home goods brand",
     industry: "E-commerce & Retail",
-    service: "Customer Support Outsourcing",
+    service: "Dedicated Teams & Virtual Assistance",
     challenge:
       "Holiday volumes tripled and a three-person in-house team was answering tickets 40 hours late, dragging CSAT to 71%.",
     approach: [
@@ -654,7 +918,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "saas-outbound-pipeline",
     client: "B2B workflow software company",
     industry: "SaaS & Technology",
-    service: "Outbound Sales Support",
+    service: "Dedicated Teams & Virtual Assistance",
     challenge:
       "Two local SDRs cost more than the pipeline they produced, and outreach stalled whenever one of them left.",
     approach: [
@@ -676,7 +940,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "logistics-24-7-desk",
     client: "Freight forwarding group",
     industry: "Logistics & Supply Chain",
-    service: "Customer Support Outsourcing",
+    service: "Dedicated Teams & Virtual Assistance",
     challenge:
       "Shipment exceptions raised overnight sat untouched until morning, creating detention charges and customer churn.",
     approach: [

@@ -1,3 +1,4 @@
+import { ServiceLink } from "@/components/service-link";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CalendarDays, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -100,14 +101,13 @@ function IndustryDetail() {
         <h2 className="text-2xl text-charcoal">Services commonly deployed here</h2>
         <div className="mt-8 flex flex-wrap gap-3">
           {services.map((s) => (
-            <Link
+            <ServiceLink
               key={s.slug}
-              to="/services/$slug"
-              params={{ slug: s.slug }}
+              service={s}
               className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-charcoal transition-colors hover:border-marigold hover:text-marigold"
             >
               {s.title}
-            </Link>
+            </ServiceLink>
           ))}
         </div>
         <div className="mt-10 flex flex-wrap gap-3">

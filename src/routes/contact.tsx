@@ -55,8 +55,8 @@ function ContactPage() {
             <ul className="mt-6 space-y-4 text-sm text-muted-foreground">
               <li className="flex items-center gap-3">
                 <Mail className="size-4 text-marigold" />
-                <a href={`mailto:${site.email}`} className="hover:text-marigold">
-                  {site.email}
+                <a href={`mailto:${site.infoEmail}`} className="hover:text-marigold">
+                  {site.infoEmail}
                 </a>
               </li>
               <li className="flex items-center gap-3">

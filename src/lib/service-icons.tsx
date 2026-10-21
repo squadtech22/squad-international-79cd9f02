@@ -1,4 +1,4 @@
-import { Stethoscope, Headset, PhoneOutgoing, Users, Briefcase, type LucideIcon } from "lucide-react";
+import { Stethoscope, Workflow, Globe, Users, Briefcase, type LucideIcon } from "lucide-react";
 
 /**
  * One icon per service, keyed by slug rather than array position so reordering
@@ -10,8 +10,8 @@ import { Stethoscope, Headset, PhoneOutgoing, Users, Briefcase, type LucideIcon 
  */
 const SERVICE_ICONS: Record<string, LucideIcon> = {
   "medical-billing-healthcare": Stethoscope,
-  "customer-support": Headset,
-  "lead-generation": PhoneOutgoing,
+  "ai-workflow-automation": Workflow,
+  "website-design-development": Globe,
   "virtual-business-assistance": Users,
 };
 

@@ -32,7 +32,7 @@ export const sendApplication = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<SendResult> => {
     if (data.company_website) return { ok: true };
 
-    const to = process.env["CAREERS_TO"] ?? process.env["ENQUIRY_TO"] ?? site.email;
+    const to = process.env["CAREERS_TO"] ?? site.careersEmail;
 
     const { text, html } = buildBody(
       `New application — ${data.role}`,

@@ -1,3 +1,4 @@
+import { ServiceLink } from "@/components/service-link";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -244,10 +245,9 @@ function Home() {
 
         <div className="mt-12 grid gap-5 md:grid-cols-2">
           {services.map((s) => (
-            <Link
+            <ServiceLink
               key={s.slug}
-              to="/services/$slug"
-              params={{ slug: s.slug }}
+              service={s}
               className="group flex flex-col rounded-lg border border-border bg-card p-7 card-pop hover:border-marigold hover:shadow-[var(--shadow-elevated)]"
             >
               {/*
@@ -280,7 +280,7 @@ function Home() {
               <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-charcoal group-hover:text-marigold">
                 View service <ArrowRight className="size-4" />
               </span>
-            </Link>
+            </ServiceLink>
           ))}
         </div>
 

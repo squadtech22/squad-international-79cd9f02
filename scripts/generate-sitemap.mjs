@@ -27,7 +27,10 @@ function arrayBody(name) {
 
 const slugsOf = (name) => [...arrayBody(name).matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
 
-const services = slugsOf("services");
+const externalServices = new Set(
+  [...arrayBody("services").matchAll(/slug:\s*"([^"]+)",\s*externalUrl:/g)].map((m) => m[1]),
+);
+const services = slugsOf("services").filter((slug) => !externalServices.has(slug));
 const industries = slugsOf("industries");
 const caseStudies = slugsOf("caseStudies");
 const posts = slugsOf("posts");

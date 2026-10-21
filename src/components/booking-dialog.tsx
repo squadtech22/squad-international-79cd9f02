@@ -175,7 +175,11 @@ function CalendlyInline({ onReady }: { onReady: () => void }) {
   return <div ref={containerRef} className="h-[520px] w-full" />;
 }
 
-export function BookingDialog({ children }: { children: ReactNode }) {
+export function BookingDialog({ children, initialService, initialNotes = "" }: {
+  children: ReactNode;
+  initialService?: string;
+  initialNotes?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"calendly" | "direct">("calendly");
@@ -188,8 +192,8 @@ export function BookingDialog({ children }: { children: ReactNode }) {
     phone: "",
     date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
     time: "02:00 PM EST",
-    service: services[0]?.title || "Medical Billing & RCM",
-    notes: "",
+    service: initialService ?? services[0]?.title ?? "Medical Billing & RCM",
+    notes: initialNotes,
   });
 
   const handleOpenChange = (nextOpen: boolean) => {

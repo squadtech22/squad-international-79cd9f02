@@ -1,3 +1,4 @@
+import { ServiceLink } from "@/components/service-link";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CalendarDays, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/services/")({
       {
         name: "description",
         content:
-          "Medical billing and revenue cycle management, customer support outsourcing, outbound sales support and dedicated virtual assistance, built around the way your business works.",
+          "Medical Billing & RCM, Dedicated Teams & Virtual Assistance, AI Workflow Automation, and Website Design & Development.",
       },
       { property: "og:title", content: "Outsourcing Services | Squad International" },
       {
@@ -31,7 +32,7 @@ function ServicesPage() {
       <PageHero
         eyebrow="Services"
         title="Flexible support. Built around your business."
-        description="From medical billing and revenue cycle management to customer support, outbound sales and dedicated virtual assistance, we provide outsourced support built around the way your business works, helping you reduce operating costs, improve efficiency and add capacity without building every role in-house."
+        description="Medical Billing & RCM, Dedicated Teams & Virtual Assistance, AI Workflow Automation, and Website Design & Development help you add capacity and improve the way your business works. Our dedicated teams include outbound sales, customer support and administrative assistance."
       >
         <BookingDialog>
           <Button variant="marigold" size="lg">
@@ -74,9 +75,9 @@ function ServicesPage() {
               </dl>
               <div className="mt-8">
                 <Button variant="charcoal" asChild>
-                  <Link to="/services/$slug" params={{ slug: s.slug }}>
+                  <ServiceLink service={s}>
                     View service <ArrowRight />
-                  </Link>
+                  </ServiceLink>
                 </Button>
               </div>
             </article>
