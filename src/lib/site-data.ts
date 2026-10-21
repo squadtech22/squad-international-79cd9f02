@@ -447,7 +447,7 @@ export const services: Service[] = [
   },
   {
     slug: "custom-software-mobile-app-development",
-    externalUrl: "https://www.squadtechsol.com/services",
+    externalUrl: "https://www.squadtechsol.com/services/custom-software-mobile-app-development",
     title: "Custom Software and Mobile App Development",
     short: "Build software and mobile applications around your business processes and customer needs.",
     summary: "Custom software and mobile app development through Squad Tech Solutions, from requirements and user experience design to development, testing and launch.",
@@ -545,7 +545,7 @@ export const services: Service[] = [
       }
     ],
     slug: "website-design-development",
-    externalUrl: "https://www.squadtechsol.com/services",
+    externalUrl: "https://www.squadtechsol.com/services/web-development",
     title: "Website Design & Development",
     short: "Professional, responsive websites for your business, from a focused company website to an inquiry-driven platform or ecommerce store.",
     summary: "Professional, responsive websites built for your business, from a focused company website to an inquiry-driven platform or ecommerce store. Includes basic on-page SEO, CMS training, revisions, and post-launch support.",
@@ -707,7 +707,7 @@ export const services: Service[] = [
       }
     ],
     slug: "ai-workflow-automation",
-    externalUrl: "https://www.squadtechsol.com/services",
+    externalUrl: "https://www.squadtechsol.com/services/ai-development-workflow-automation",
     title: "AI Development & Workflow Automation",
     short: "Automate repetitive business tasks, connect your tools and streamline operations with AI-assisted workflows.",
     summary: "Automate repetitive business tasks, connect your tools, and streamline operations with AI-assisted workflows. Includes testing, documentation, team training, and post-launch support.",
