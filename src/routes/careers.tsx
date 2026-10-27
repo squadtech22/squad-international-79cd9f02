@@ -13,11 +13,19 @@ import { sendApplication } from "@/lib/send-application";
 import { parseRichContent } from "@/lib/rich-content";
 import { JobDescription } from "@/lib/job-content";
 import { db } from "@/lib/firebase";
+import { getSharedJob, jobSlug, type SharedJob } from "@/lib/shared-job";
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
 export const Route = createFileRoute("/careers")({
-  head: () => ({
-    meta: [
+  validateSearch: (search: Record<string, unknown>): { job?: string } =>
+    typeof search["job"] === "string" && search["job"] ? { job: search["job"] } : {},
+  loaderDeps: ({ search }) => ({ job: search.job }),
+  // Only the server render needs the job: link previews (WhatsApp, LinkedIn, …)
+  // read the meta tags from the HTML and never run the page's script.
+  loader: ({ deps }) =>
+    deps.job && typeof window === "undefined" ? getSharedJob(deps.job) : null,
+  head: ({ loaderData: job }) => ({
+    meta: job ? sharedJobMeta(job) : [
       { title: "Careers at Squad International | Support, SDR & Operations Roles" },
       {
         name: "description",
@@ -33,6 +41,23 @@ export const Route = createFileRoute("/careers")({
   }),
   component: CareersPage,
 });
+
+/** Meta tags for a shared job link, so its preview card shows that job. */
+function sharedJobMeta(job: SharedJob) {
+  const title = job.location ? `${job.title} - ${job.location}` : job.title;
+  const preview = getJobPreview(job);
+  const description =
+    (preview.length > 155 ? `${preview.slice(0, 152).trimEnd()}…` : preview) ||
+    `Apply for the ${job.title} job at Squad International. See the role, requirements and how to apply.`;
+  return [
+    { title: `${job.title} | Careers at Squad International` },
+    { name: "description", content: description },
+    { property: "og:title", content: `${title} | Squad International` },
+    { property: "og:description", content: description },
+    { property: "og:url", content: `${site.url}/careers?job=${encodeURIComponent(job.slug)}` },
+    { property: "og:type", content: "website" },
+  ];
+}
 
 export type JobRole = {
   id?: string;
@@ -71,23 +96,41 @@ function applyLabel(source: string) {
 }
 
 /**
- * The job's anchor on this page, so each open role has a link of its own
- * (squadinternational.net/careers#customer-support-agent). The admin portal
- * builds the same slug for its "Copy link" button, so keep the two in step.
+ * Extracts a clean narrative summary snippet from the job description
+ * to show as a proper preview alongside the job title.
  */
-function jobSlug(role: Pick<JobRole, "id" | "title">) {
-  const slug = (role.title ?? "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return slug || role.id || "job";
+function getJobPreview(role: Pick<JobRole, "summary">): string {
+  const text = (role.summary ?? "").trim();
+  if (!text) return "";
+
+  // Split into lines to extract clean narrative copy
+  const lines = text
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  // Filter out short heading/label lines (e.g. "Requirements:", "Shift: Night")
+  const narrative = lines.filter((line) => {
+    // Drop lines with purely "Key: Value" facts
+    if (/^[A-Za-z /&-]{1,35}\s*:\s*.+$/.test(line) && line.length < 50) return false;
+    // Drop short headers
+    if (/^[A-Za-z /&-]{1,35}:?$/.test(line) && line.length < 35) return false;
+    return true;
+  });
+
+  const source = narrative.length > 0 ? narrative.join(" ") : lines.join(" ");
+  return source
+    .replace(/[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\u{FE0F}\u{200D}\u{20E3}]/gu, "")
+    .replace(/^[•*\-\d.]+\s*/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 /**
- * One open role. Cards start as just the title and terms, so the list can be
- * scanned, and open to the full description and apply options on click. The
- * details stay mounted and animate their height (grid rows 0fr → 1fr), so the
- * card opens and closes smoothly rather than jumping.
+ * One open role. Cards start as the title, terms and a description preview,
+ * and open to the full description and apply options on click. The details
+ * stay mounted and animate their height (grid rows 0fr → 1fr), so the card
+ * opens and closes smoothly rather than jumping.
  */
 function JobCard({
   role,
@@ -104,6 +147,7 @@ function JobCard({
   const detailsId = `${slug}-details`;
   const nodes = parseRichContent(role.content, role.summary);
   const cardRef = useRef<HTMLElement>(null);
+  const preview = getJobPreview(role);
 
   // A card above this one may close as this one opens, which pulls this one up
   // the page. Once both have settled, bring its top back into view if it left.
@@ -120,7 +164,7 @@ function JobCard({
   }, [open]);
 
   const copyLink = async () => {
-    const url = `${window.location.origin}/careers#${slug}`;
+    const url = `${window.location.origin}/careers?job=${encodeURIComponent(slug)}`;
     try {
       await navigator.clipboard.writeText(url);
       toast.success("Job link copied", { description: url });
@@ -151,13 +195,13 @@ function JobCard({
 
       <button
         type="button"
-        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left md:px-7"
+        className="flex w-full items-start justify-between gap-4 px-6 py-5 text-left md:px-7"
         aria-expanded={open}
         aria-controls={detailsId}
         onClick={onToggle}
       >
-        <span className="min-w-0">
-          <h3 className="text-base text-charcoal transition-colors group-hover/job:text-marigold md:text-lg">
+        <span className="min-w-0 flex-1">
+          <h3 className="text-base font-semibold text-charcoal transition-colors group-hover/job:text-marigold md:text-lg">
             {role.title}
           </h3>
           <span className="mt-2.5 flex flex-wrap gap-2">
@@ -172,8 +216,13 @@ function JobCard({
               </span>
             )}
           </span>
+          {preview && (
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground line-clamp-2 pr-2">
+              {preview}
+            </p>
+          )}
         </span>
-        <span className="flex shrink-0 items-center gap-2.5 text-xs font-semibold text-charcoal">
+        <span className="mt-1 flex shrink-0 items-center gap-2.5 text-xs font-semibold text-charcoal">
           <span className="hidden sm:inline">{open ? "Hide details" : "View details"}</span>
           <span
             className={`grid size-9 place-items-center rounded-full border transition-all duration-[400ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${
@@ -322,26 +371,43 @@ function CareersPage() {
     }
   }, []);
 
-  // A shared job link (/careers#slug) opens that job once the roles arrive.
+  // A shared job link (/careers?job=slug, or the older /careers#slug) opens
+  // that job once the roles arrive.
   const linkedJobHandled = useRef(false);
   useEffect(() => {
     if (linkedJobHandled.current || roles.length === 0) return;
-    const hash = decodeURIComponent(window.location.hash.slice(1));
-    if (!hash) return;
+    const linked =
+      new URLSearchParams(window.location.search).get("job") ||
+      decodeURIComponent(window.location.hash.slice(1));
+    if (!linked) return;
     linkedJobHandled.current = true;
-    if (!roles.some((r) => jobSlug(r) === hash)) return;
-    setOpenJob(hash);
-    requestAnimationFrame(() => document.getElementById(hash)?.scrollIntoView({ block: "start" }));
+    if (!roles.some((r) => jobSlug(r) === linked)) return;
+    setOpenJob(linked);
+    requestAnimationFrame(() => document.getElementById(linked)?.scrollIntoView({ block: "start" }));
   }, [roles]);
+
+  // Update document title when a job is open, so browser tabs and previews show the job title
+  useEffect(() => {
+    if (!openJob) {
+      document.title = "Careers at Squad International | Support, SDR & Operations Roles";
+      return;
+    }
+    const matched = roles.find((r) => jobSlug(r) === openJob);
+    if (matched?.title) {
+      document.title = `${matched.title} | Careers at Squad International`;
+    }
+  }, [openJob, roles]);
 
   const toggleJob = (slug: string) => {
     const next = openJob === slug ? null : slug;
     setOpenJob(next);
-    // Keep the address bar on the open job, so it can be copied from there too.
-    // Updating the job link is local UI state, so don't reset the page's scroll
-    // position or let hash navigation compete with the card's scroll handling.
+    // Keep the address bar on the open job, so it can be copied from there too
+    // and still gets the job's own link preview. Updating the job link is local
+    // UI state, so don't reset the page's scroll position or let hash navigation
+    // compete with the card's scroll handling.
     void navigate({
-      hash: next ?? "",
+      search: next ? { job: next } : {},
+      hash: "",
       replace: true,
       resetScroll: false,
       hashScrollIntoView: false,

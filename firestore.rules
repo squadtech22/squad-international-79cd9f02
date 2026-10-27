@@ -5,6 +5,125 @@ service cloud.firestore {
 
     // Allow read & write for all collections used by Squad International website & Admin Portal
 
+    // Protected grants: never derive credentials access from public users/roles.
+    match /credentialsAccess/{email} {
+      allow read: if isPortalAdmin() || (request.auth != null
+        && request.auth.token.email is string && request.auth.token.email.lower() == email);
+      allow write: if isPortalAdmin();
+    }
+    function canManageCredentials() {
+      return isPortalAdmin() || (request.auth != null
+        && request.auth.token.email is string
+        && exists(/databases/$(database)/documents/credentialsAccess/$(request.auth.token.email.lower())));
+    }
+    match /credentialSections/{sectionId} {
+      allow read, delete: if canManageCredentials();
+      allow create, update: if canManageCredentials()
+        && request.resource.data.keys().hasOnly(['title', 'people', 'createdAt', 'updatedAt', 'updatedBy'])
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 160
+        && request.resource.data.people is list
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.token.email.lower();
+    }
+
+    function canManageAttendanceSheets() {
+      return isPortalAdmin() || (request.auth != null
+        && request.auth.token.email is string
+        && (exists(/databases/$(database)/documents/hrAccess/$(request.auth.token.email.lower()))
+          || exists(/databases/$(database)/documents/credentialsAccess/$(request.auth.token.email.lower()))));
+    }
+    match /attendanceSheets/{sheetId} {
+      allow read, delete: if canManageAttendanceSheets();
+      allow create: if canManageAttendanceSheets()
+        && request.resource.data.keys().hasOnly(['columns', 'rows', 'fileName', 'worksheet', 'headerRow', 'office', 'importedBy', 'importedAt', 'recordCount', 'records', 'dateKeys'])
+        && request.resource.data.columns is list
+        && request.resource.data.columns.size() > 0
+        && request.resource.data.columns.size() <= 50
+        && request.resource.data.rows is list
+        && request.resource.data.rows.size() > 0
+        && request.resource.data.rows.size() <= 2000
+        && request.resource.data.recordCount == request.resource.data.rows.size()
+        && request.resource.data.records is list
+        && request.resource.data.records.size() == request.resource.data.recordCount
+        && request.resource.data.dateKeys is list
+        && request.resource.data.dateKeys.size() > 0
+        && request.resource.data.dateKeys.size() <= 2000
+        && request.resource.data.fileName is string
+        && request.resource.data.worksheet is string
+        && request.resource.data.headerRow is int
+        && request.resource.data.headerRow > 0
+        && request.resource.data.office is string
+        && request.resource.data.importedBy == request.auth.token.email.lower()
+        && request.resource.data.importedAt == request.time;
+      allow update: if false;
+    }
+
+    // Inventory module grants are maintained by an authenticated portal admin.
+    match /inventoryAccess/{email} {
+      allow read: if isPortalAdmin() || (request.auth != null
+        && request.auth.token.email is string && request.auth.token.email.lower() == email);
+      allow write: if isPortalAdmin();
+    }
+    function hasInventoryPlanAccess() {
+      return isPortalAdmin() || (request.auth != null
+        && request.auth.token.email is string
+        && exists(/databases/$(database)/documents/inventoryAccess/$(request.auth.token.email.lower())));
+    }
+    match /inventoryPlans/{planId} {
+      function validPlan() {
+        let data = request.resource.data;
+        return data.keys().hasOnly(['service', 'planName', 'provider', 'cost', 'currency', 'billingCycle', 'renewalDate', 'status', 'assignedTo', 'office', 'seats', 'autoRenew', 'notes', 'createdAt', 'updatedAt', 'updatedBy'])
+          && data['service'] is string && data['service'].size() > 0 && data['service'].size() <= 160
+          && data.planName is string && data.planName.size() <= 160
+          && data.provider is string && data.provider.size() <= 160
+          && data.cost is number && data.cost >= 0 && data.cost <= 1000000000000
+          && data.currency in ['PKR', 'USD', 'GBP', 'EUR', 'AED']
+          && data.billingCycle in ['Monthly', 'Quarterly', 'Half-yearly', 'Yearly']
+          && data.renewalDate is string && (data.renewalDate == '' || data.renewalDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'))
+          && data.status in ['Active', 'Trial', 'Paused', 'Cancelled', 'Expired']
+          && data.assignedTo is string && data.assignedTo.size() <= 160
+          && data.office is string && data.office.size() > 0
+          && data.seats is int && data.seats >= 1 && data.seats <= 1000000
+          && data.autoRenew is bool
+          && data.notes is string && data.notes.size() <= 4000
+          && data.updatedAt == request.time
+          && data.updatedBy == request.auth.token.email.lower();
+      }
+      allow read, delete: if hasInventoryPlanAccess();
+      allow create: if hasInventoryPlanAccess() && validPlan() && request.resource.data.createdAt == request.time;
+      allow update: if hasInventoryPlanAccess() && validPlan() && request.resource.data.createdAt == resource.data.createdAt;
+    }
+
+    // Attendance uses a minimal HR-managed projection, never salary/bank/documents.
+    match /attendanceMembers/{employeeId} {
+      function canMaintainMember() {
+        return isPortalAdmin() || (request.auth != null
+          && request.auth.token.email is string
+          && exists(/databases/$(database)/documents/hrAccess/$(request.auth.token.email.lower())));
+      }
+      function validMember() {
+        let data = request.resource.data;
+        let employee = get(/databases/$(database)/documents/employees/$(employeeId)).data;
+        return data.keys().hasOnly(['employeeRecordId', 'employeeId', 'name', 'email', 'portalUserId', 'role', 'office', 'status', 'joiningDate', 'exitDate'])
+          && data.employeeRecordId == employeeId
+          && data.employeeId == employee.get('employeeId', '')
+          && data.name == employee.fullName
+          && data.email == (employee.get('attendanceEmail', '') != '' ? employee.attendanceEmail : employee.get('personalEmail', '')).lower()
+          && data.portalUserId == employee.get('portalUserId', '')
+          && data.role == (employee.get('designation', '') != '' ? employee.designation : employee.get('department', ''))
+          && data.office == employee.get('office', '')
+          && data.status == employee.get('status', 'Active')
+          && data.joiningDate == employee.get('joiningDate', '')
+          && data.exitDate == employee.get('exitDate', '');
+      }
+      allow read: if canManageAttendanceSheets() || (request.auth != null
+        && request.auth.token.email is string && resource.data.email == request.auth.token.email.lower());
+      allow create, update: if canMaintainMember() && validMember();
+      allow delete: if canMaintainMember() && !exists(/databases/$(database)/documents/employees/$(employeeId));
+    }
+
     // Roles and Permissions
     match /roles/{document=**} {
       allow read, write: if true;
@@ -18,6 +137,17 @@ service cloud.firestore {
     // Office Locations
     match /offices/{document=**} {
       allow read, write: if true;
+    }
+
+    // Finance access follows the permission assigned by a portal admin.
+    match /financeAccess/{email} {
+      allow read: if isPortalAdmin() || (request.auth != null && request.auth.token.email.lower() == email);
+      allow write: if isPortalAdmin();
+    }
+    match /financeEntries/{entryId} {
+      allow read, write: if isPortalAdmin() || (request.auth != null
+        && request.auth.token.email is string
+        && exists(/databases/$(database)/documents/financeAccess/$(request.auth.token.email.lower())));
     }
 
     // DME Revenue Calculator & Records
@@ -58,6 +188,114 @@ service cloud.firestore {
     // Dedicated BPO Client Pods & Campaigns
     match /campaigns/{document=**} {
       allow read, write: if true;
+    }
+
+    // Office Inventory & Equipment (Karachi, Wah Cantt)
+    match /inventory/{document=**} {
+      allow read, write: if true;
+    }
+
+    // ---- Attendance: times come from the server clock only ----
+    //
+    // The portal writes check-in / check-out as serverTimestamp(). These rules
+    // reject any time that is not exactly the server's request.time, so a
+    // changed PC clock or an edited request cannot record a different time.
+
+    // Today's date in Pakistan (UTC+5), e.g. "2026-10-21".
+    // Must match dayKeyOf() in src/lib/attendance.js.
+    function pad2(n) {
+      return n < 10 ? '0' + string(n) : string(n);
+    }
+    function pktDayKey() {
+      let t = request.time + duration.value(5, 'h');
+      return string(t.year()) + '-' + pad2(t.month()) + '-' + pad2(t.day());
+    }
+
+    // Accounts allowed to correct attendance and see HR employee records.
+    // A document id here is the
+    // Firebase Authentication UID of an admin. Add them in the Firebase
+    // console only; the portal can never write to this collection.
+    match /admins/{uid} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    function isPortalAdmin() {
+      return request.auth != null
+          && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // One record per member per day: id "<userId>_<YYYY-MM-DD>".
+    match /attendance/{recordId} {
+
+      // Check in: only for today (server date), stamped with server time.
+      // A second check-in the same day hits the existing doc and is refused.
+      function isMemberCheckIn() {
+        let data = request.resource.data;
+        return data.keys().hasOnly(
+                 ['userId', 'employeeRecordId', 'employeeId', 'name', 'email', 'role', 'office', 'dateKey', 'checkIn', 'checkOut'])
+            && request.auth != null
+            && request.auth.token.email is string
+            && data.employeeRecordId is string
+            && exists(/databases/$(database)/documents/attendanceMembers/$(data.employeeRecordId))
+            && get(/databases/$(database)/documents/attendanceMembers/$(data.employeeRecordId)).data.email == request.auth.token.email.lower()
+            && get(/databases/$(database)/documents/attendanceMembers/$(data.employeeRecordId)).data.status == 'Active'
+            && data.userId == (get(/databases/$(database)/documents/attendanceMembers/$(data.employeeRecordId)).data.portalUserId != ''
+              ? get(/databases/$(database)/documents/attendanceMembers/$(data.employeeRecordId)).data.portalUserId : data.employeeRecordId)
+            && data.userId is string
+            && data.userId.size() > 0
+            && data.dateKey == pktDayKey()
+            && recordId == data.userId + '_' + pktDayKey()
+            && data.checkIn == request.time
+            && data.checkOut == null;
+      }
+
+      // Check out: once, stamped with server time, nothing else may change.
+      function isMemberCheckOut() {
+        return resource.data.checkOut == null
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['checkOut'])
+            && request.resource.data.checkOut == request.time;
+      }
+
+      // Admin correction: must say who made it, stamped with server time.
+      function isAdminCorrection() {
+        return isPortalAdmin()
+            && request.resource.data.editedBy is string
+            && request.resource.data.editedAt == request.time;
+      }
+
+      allow read: if true;
+      allow create: if isMemberCheckIn() || isAdminCorrection();
+      allow update: if isMemberCheckOut() || isAdminCorrection();
+      allow delete: if isPortalAdmin();
+    }
+
+    // Staff given the HR permission in Team & User Access, keyed by lowercase
+    // email. The portal keeps this in step while an admin is signed in; only
+    // admins can change it.
+    match /hrAccess/{email} {
+      allow read: if isPortalAdmin()
+                  || (request.auth != null && request.auth.token.email.lower() == email);
+      allow write: if isPortalAdmin();
+    }
+
+    function hasHrAccess() {
+      return request.auth != null
+          && request.auth.token.email is string
+          && exists(/databases/$(database)/documents/hrAccess/$(request.auth.token.email.lower()));
+    }
+
+    // HR: Employee Data Records. Holds CNIC, salary and bank details, so only
+    // admins and HR staff can read or write it; nobody else, signed in or not.
+    match /employees/{document=**} {
+      allow read, write: if isPortalAdmin() || hasHrAccess();
+    }
+
+    // Used once per session to read the server's clock.
+    match /serverClock/{clockId} {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasOnly(['at'])
+                   && request.resource.data.at == request.time;
     }
   }
 }
